@@ -40,6 +40,15 @@ If the next step is clearly low-return relative to the user's likely effort:
 Do this instead of pushing more polish or low-signal follow-up work.
 Keep the wording short and decisive.
 
+Before proposing a next step, run this quick checklist:
+
+1. Is the next step delivering real user value or just extra polish?
+2. Will it require manual commands, extra review, or attention that feels disproportionate?
+3. Is there a higher-value TODO already available?
+4. If yes, should you offer `停` or `跳过` instead of pushing forward?
+
+If the checklist comes out low ROI, prefer the stop template over another procedural suggestion.
+
 ## Scan The Current Conversation
 
 When the user asks to scan the current conversation for habit candidates:

@@ -53,6 +53,13 @@ Response constraints for this pattern:
 - explicitly name the tradeoff instead of using vague softening language
 - when possible, mention that you will switch to a higher-value TODO after the stop word
 
+Before suggesting any next step, do this quick self-check:
+
+- is this next step mostly polish rather than substance
+- is the user cost higher than the likely payoff
+- is there a more valuable pending item available right now
+- if so, should the reply switch to the low-ROI stop template instead
+
 ## After A Scan
 
 When the backend returns candidates:
