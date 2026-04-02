@@ -19,6 +19,31 @@ It is designed for the flow where the user wants to stay inside the current conv
 The skill itself does not implement habit interpretation logic.
 It delegates that work to a configured `user-habit-pipeline` backend through a local wrapper script in this repository.
 
+## Public Contract vs Local Config
+
+This repository is intentionally split into:
+
+- public skill contract
+- machine-local install state
+
+Public contract:
+
+- [SKILL.md](/E:/manage-current-session-habits/SKILL.md)
+- [agents/openai.yaml](/E:/manage-current-session-habits/agents/openai.yaml)
+- [scripts/invoke-backend.ps1](/E:/manage-current-session-habits/scripts/invoke-backend.ps1)
+- [references/backend-contract.md](/E:/manage-current-session-habits/references/backend-contract.md)
+
+Machine-local state:
+
+- `config/local-config.json`
+- the installed junction under the user's Codex skills directory
+
+This distinction matters for sharing and future marketplace use:
+
+- public files should stay portable
+- machine-local addresses should be generated during install
+- user-facing docs should not rely on author-machine absolute paths as the only supported contract
+
 ## Repository Layout
 
 - [SKILL.md](/E:/manage-current-session-habits/SKILL.md): skill instructions loaded by Codex
@@ -43,6 +68,16 @@ Backend resolution order:
 1. `-BackendRepoPath`
 2. `USER_HABIT_PIPELINE_REPO`
 3. a sibling folder named `user-habit-pipeline`
+
+## Requirements
+
+To use this skill on another machine, the user needs:
+
+- a local checkout of this skill repository
+- a local checkout of `user-habit-pipeline`
+- PowerShell
+- Node.js available on `PATH`
+- a Codex installation that reads skills from `CODEX_HOME\skills` or `%USERPROFILE%\.codex\skills`
 
 ## Local Install
 
@@ -77,6 +112,29 @@ Verify the install and config:
 & .\scripts\check-install.ps1 -SmokeTest
 ```
 
+## Install On Another Machine
+
+Typical setup sequence:
+
+1. Clone this repository to any local directory.
+2. Clone `user-habit-pipeline` to any local directory.
+3. Run the install script with the backend repo path:
+
+```powershell
+cd <skill-repo>
+& .\scripts\install-skill.ps1 -BackendRepoPath <path-to-user-habit-pipeline>
+```
+
+4. Run the install check:
+
+```powershell
+& .\scripts\check-install.ps1 -SmokeTest
+```
+
+5. Open Codex and trigger the skill from a normal conversation.
+
+If the backend location changes later, rerun the install script instead of editing `SKILL.md`.
+
 ## Typical Flow
 
 1. In a Codex conversation, ask to scan the current session for habit candidates.
@@ -97,8 +155,27 @@ user: 收尾一下
 & .\scripts\invoke-backend.ps1 -Request "扫描这次会话里的习惯候选" -Transcript $transcript
 ```
 
+## Sharing And Publishing Notes
+
+This repository is designed so it can be shared without exposing one machine's path layout as a hard requirement.
+
+Current portability rules:
+
+- install location is derived from `CODEX_HOME` or `%USERPROFILE%`
+- backend location is resolved from a parameter, environment variable, or sibling repo
+- machine-local path binding is stored in `config/local-config.json`
+- the tracked `config/example.local-config.json` is only a template
+
+If this skill is prepared for a marketplace or wider sharing, keep these rules:
+
+- do not reintroduce hardcoded author-machine absolute paths into public docs
+- keep local addresses in generated config only
+- keep the wrapper contract stable
+- keep the backend dependency explicit rather than hidden
+
 ## Notes
 
 - The source of truth for active habit rules remains the user overlay managed by `user-habit-pipeline`.
 - This repository intentionally stays small and Codex-facing.
 - If the backend path changes, rerun [install-skill.ps1](/E:/manage-current-session-habits/scripts/install-skill.ps1) instead of editing the skill instructions manually.
+- If this skill is published more broadly, the install script and generated local config should remain the only place where machine-specific paths are bound.
