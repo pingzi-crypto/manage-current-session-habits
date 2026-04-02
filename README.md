@@ -26,6 +26,7 @@ It delegates that work to a configured `user-habit-pipeline` backend through a l
 - [references/backend-contract.md](/E:/manage-current-session-habits/references/backend-contract.md): backend command contract and install path
 - [references/interaction-patterns.md](/E:/manage-current-session-habits/references/interaction-patterns.md): response and follow-up phrasing guidance
 - [scripts/install-skill.ps1](/E:/manage-current-session-habits/scripts/install-skill.ps1): local install helper for Codex skill discovery
+- [scripts/check-install.ps1](/E:/manage-current-session-habits/scripts/check-install.ps1): local install verifier and optional smoke test
 - [scripts/invoke-backend.ps1](/E:/manage-current-session-habits/scripts/invoke-backend.ps1): wrapper that reads local config and forwards requests
 - [config/example.local-config.json](/E:/manage-current-session-habits/config/example.local-config.json): tracked config template
 
@@ -67,6 +68,13 @@ You can also set the backend path through an environment variable:
 ```powershell
 $env:USER_HABIT_PIPELINE_REPO = 'D:\path\to\user-habit-pipeline'
 & .\scripts\install-skill.ps1
+```
+
+Verify the install and config:
+
+```powershell
+& .\scripts\check-install.ps1
+& .\scripts\check-install.ps1 -SmokeTest
 ```
 
 ## Typical Flow

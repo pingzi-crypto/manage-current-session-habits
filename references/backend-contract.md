@@ -16,6 +16,7 @@ Example tracked template:
 - `config/example.local-config.json`
 
 Use [install-skill.ps1](../scripts/install-skill.ps1) to generate or refresh the real local config.
+Use [check-install.ps1](../scripts/check-install.ps1) to verify the local install and optionally run a wrapper smoke test.
 
 The install script resolves the backend repo in this order:
 
