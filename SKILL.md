@@ -29,6 +29,17 @@ When the bridge returns successful JSON:
 Do not restate the full raw JSON unless the user explicitly asks for it.
 Do not replace backend wording with a looser paraphrase unless the backend reply is clearly insufficient for the current turn.
 
+## Low-ROI Stop Rule
+
+If the next step is clearly low-return relative to the user's likely effort:
+
+1. Say that directly.
+2. Offer a one-word stop option such as `停` or `跳过`.
+3. Tell the user you can switch to a higher-value TODO after that stop word.
+
+Do this instead of pushing more polish or low-signal follow-up work.
+Keep the wording short and decisive.
+
 ## Scan The Current Conversation
 
 When the user asks to scan the current conversation for habit candidates:

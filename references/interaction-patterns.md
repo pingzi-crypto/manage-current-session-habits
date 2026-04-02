@@ -30,6 +30,29 @@ Use this especially when:
 - the user would need extra manual handling for limited gain
 - the current branch of work is no longer the best use of attention
 
+Preferred low-ROI wording pattern:
+
+```markdown
+这一步继续做的收益不高，可能不太划算。
+如果你想停掉这个方向，直接回 `停`。
+我就改看更高价值的 TODO。
+```
+
+Optional variant:
+
+```markdown
+这一步大概率是低 ROI，继续做更像补边角料。
+如果要跳过，直接回 `跳过`。
+我切到下一个更值钱的待办。
+```
+
+Response constraints for this pattern:
+
+- keep it to 2-3 short lines
+- the stop word should be a single word
+- explicitly name the tradeoff instead of using vague softening language
+- when possible, mention that you will switch to a higher-value TODO after the stop word
+
 ## After A Scan
 
 When the backend returns candidates:
