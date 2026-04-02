@@ -90,8 +90,16 @@ Preferred list example:
 
 ```markdown
 当前记录：新增 2 条，移除 1 条，忽略建议 1 条。
-1. 「收尾一下」 -> `close_session`
-2. 「复盘一下」 -> `close_session`
+
+新增短句：
+1. 「收尾一下」 -> `close_session`；场景 `session_close`；置信度 0.86
+2. 「复盘一下」 -> `close_session`；场景 `session_close`；置信度 0.84
+
+已移除短句：
+1. 「验收」
+
+已忽略建议：
+1. 「收工啦」
 ```
 
 ## Guardrails
