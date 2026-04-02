@@ -2,6 +2,19 @@
 
 Use these response patterns to keep the skill easy to operate inside a normal Codex conversation.
 
+## Primary Rule
+
+If the backend returns `assistant_reply_markdown`, prefer using it directly as the visible reply.
+If the backend returns `suggested_follow_ups`, prefer those exact prompts over fresh paraphrases.
+
+Only synthesize your own wording when:
+
+- the backend did not return presentation fields
+- the user explicitly asked for raw JSON or a deeper explanation
+- the current turn needs one short local-context sentence that the backend could not know
+
+Do not paste full structured JSON into the reply unless the user asks for it.
+
 ## After A Scan
 
 When the backend returns candidates:
@@ -22,6 +35,19 @@ When the backend returns candidates:
 
 If there are no candidates, say that clearly and avoid inventing next actions.
 
+Preferred scan example:
+
+```markdown
+这次会话共发现 2 条习惯候选：
+1. `c1`「收尾一下」，意图 `close_session`，建议添加，置信度 0.84；Explicit phrase-to-intent definition found, but the scenario is still general.；评分依据：未提供明确场景，保持通用候选；风险：场景未指定
+2. `c2`「收工啦」，尚无显式意图，复核候选，置信度 0.55；Repeated short phrase surfaced for review, not direct activation.；评分依据：当前会话重复带来加分 0.00，仅来自当前会话，暂不直接提升为可自动添加；风险：仅单会话证据、缺少显式 intent
+
+你接下来可以直接说：
+- `添加第1条`
+- `忽略第1条`
+- `把第1条加到 session_close 场景`
+```
+
 ## After Apply
 
 When a candidate is added successfully:
@@ -31,6 +57,12 @@ When a candidate is added successfully:
 3. Prefer the backend-provided `assistant_reply_markdown` when present.
 4. Keep the wording short and explicit so the user can trust what changed.
 
+Preferred apply example:
+
+```markdown
+已添加用户习惯短句「收尾一下」，意图 `close_session`，场景 `session_close`，置信度 0.84。
+```
+
 ## After Ignore
 
 When a candidate is ignored successfully:
@@ -38,6 +70,12 @@ When a candidate is ignored successfully:
 1. Confirm which phrase was suppressed.
 2. Say that it will be skipped by future suggestion scans.
 3. Do not imply that it became an active habit.
+
+Preferred ignore example:
+
+```markdown
+已忽略短句「收工啦」，后续扫描将不再重复建议它。
+```
 
 ## After List
 
@@ -47,6 +85,14 @@ When listing current habits:
 2. Keep the format compact.
 3. If the list is long, prefer the most actionable fields first:
    phrase, intent, scenario.
+
+Preferred list example:
+
+```markdown
+当前记录：新增 2 条，移除 1 条，忽略建议 1 条。
+1. 「收尾一下」 -> `close_session`
+2. 「复盘一下」 -> `close_session`
+```
 
 ## Guardrails
 

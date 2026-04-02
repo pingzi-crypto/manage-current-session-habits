@@ -18,6 +18,17 @@ Read [interaction-patterns.md](./references/interaction-patterns.md) when you ne
 4. For follow-up confirmations such as `添加第1条`, reuse the latest local suggestion cache and do not ask for the transcript again unless the cache is missing.
 5. If the wrapper script reports missing local config, tell the user to refresh the install with `scripts/install-skill.ps1 -BackendRepoPath <path>`.
 
+## Response Priority
+
+When the bridge returns successful JSON:
+
+1. If `assistant_reply_markdown` is present, use it as the primary user-facing reply.
+2. If `suggested_follow_ups` is present, surface those prompts directly instead of inventing different wording.
+3. Only synthesize your own wording when the bridge did not provide presentation fields or when a tiny clarification is required for local context.
+
+Do not restate the full raw JSON unless the user explicitly asks for it.
+Do not replace backend wording with a looser paraphrase unless the backend reply is clearly insufficient for the current turn.
+
 ## Scan The Current Conversation
 
 When the user asks to scan the current conversation for habit candidates:
@@ -41,6 +52,12 @@ user: 收尾一下
 6. End the message with natural follow-up prompts the user can say next, such as `添加第1条`, `把第2条加到 session_close 场景`, or `忽略第3条`.
 7. Do not auto-add anything during the scan step.
 
+Preferred scan reply behavior:
+
+- first choice: return `assistant_reply_markdown` directly
+- optional extra line: add one short sentence only if you need to connect the reply to the immediate thread context
+- never auto-append unrelated operational advice after a successful scan
+
 ## Confirm A Candidate
 
 When the user explicitly chooses a candidate, run the same natural-language request through the bridge CLI:
@@ -61,6 +78,12 @@ If the cache is missing, tell the user to scan the current conversation first.
 After a successful apply, explicitly echo the saved phrase, intent, scenario, and confidence.
 Prefer the backend-provided `assistant_reply_markdown` when present so the confirmation wording stays consistent with the bridge output.
 
+Preferred apply reply behavior:
+
+- first choice: return `assistant_reply_markdown` directly
+- if the backend also returned `suggested_follow_ups`, prefer those follow-ups over newly invented ones
+- do not imply the phrase will execute any downstream workflow automatically
+
 ## Other Requests
 
 This skill can also forward other lightweight management prompts without leaving the conversation, for example:
@@ -71,3 +94,8 @@ This skill can also forward other lightweight management prompts without leaving
 ```
 
 Use the bridge CLI for these requests so the same prompt parser remains the source of truth.
+
+For `list`, `remove`, and `ignore` requests, follow the same rule:
+
+- prefer `assistant_reply_markdown` when present
+- otherwise keep the reply short, explicit, and action-oriented
