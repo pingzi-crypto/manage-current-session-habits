@@ -15,6 +15,21 @@ Only synthesize your own wording when:
 
 Do not paste full structured JSON into the reply unless the user asks for it.
 
+## Low-ROI Guardrail
+
+If the next suggested action would create noticeably more user cost than user value:
+
+- say that directly instead of continuing to push the current direction
+- make the stop option extremely cheap
+- let the user exit with one short word such as `停` or `跳过`
+- then redirect to a higher-value pending item when one exists
+
+Use this especially when:
+
+- the remaining step is mostly polish
+- the user would need extra manual handling for limited gain
+- the current branch of work is no longer the best use of attention
+
 ## After A Scan
 
 When the backend returns candidates:
