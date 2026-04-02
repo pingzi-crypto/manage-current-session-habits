@@ -1,0 +1,4 @@
+interface:
+  display_name: "Session Habit Manager"
+  short_description: "Scan and confirm habit phrases in the current Codex thread"
+  default_prompt: "Use $manage-current-session-habits to scan this conversation for habit candidates or apply a cached candidate."
