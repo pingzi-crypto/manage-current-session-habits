@@ -18,6 +18,11 @@ Example tracked template:
 Use [install-skill.ps1](../scripts/install-skill.ps1) to generate or refresh the real local config.
 Use [check-install.ps1](../scripts/check-install.ps1) to verify the local install and optionally run a wrapper smoke test.
 
+Helpful install modes:
+
+- `-CheckOnly` resolves paths and reports what would happen without changing files
+- `-ForceRelink` recreates the installed junction even if it already points at the current repo
+
 The install script resolves the backend repo in this order:
 
 1. `-BackendRepoPath`

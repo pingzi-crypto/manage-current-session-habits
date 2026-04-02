@@ -105,6 +105,18 @@ $env:USER_HABIT_PIPELINE_REPO = 'D:\path\to\user-habit-pipeline'
 & .\scripts\install-skill.ps1
 ```
 
+Preview the resolved install target without changing anything:
+
+```powershell
+& .\scripts\install-skill.ps1 -BackendRepoPath D:\path\to\user-habit-pipeline -CheckOnly
+```
+
+Force recreation of the installed junction when needed:
+
+```powershell
+& .\scripts\install-skill.ps1 -BackendRepoPath D:\path\to\user-habit-pipeline -ForceRelink
+```
+
 Verify the install and config:
 
 ```powershell
@@ -123,6 +135,12 @@ Typical setup sequence:
 ```powershell
 cd <skill-repo>
 & .\scripts\install-skill.ps1 -BackendRepoPath <path-to-user-habit-pipeline>
+```
+
+If you want to preview what will happen first:
+
+```powershell
+& .\scripts\install-skill.ps1 -BackendRepoPath <path-to-user-habit-pipeline> -CheckOnly
 ```
 
 4. Run the install check:
