@@ -1,6 +1,6 @@
 ---
 name: manage-current-session-habits
-description: Scan the current Codex conversation for user habit phrase candidates and confirm add/remove/list actions for the user-habit-pipeline backend. Use when the user says things like `扫描这次会话里的习惯候选`, `根据这次会话建议我新增哪些用户习惯短句`, `添加第1条`, `把第1条加到 session_close 场景`, `删除用户习惯短句`, or asks to inspect current user habit phrases from inside the current Codex app thread.
+description: Scan the current Codex conversation for user habit phrase candidates and confirm add/remove/list/ignore actions for the user-habit-pipeline backend. Use when the user says things like `扫描这次会话里的习惯候选`, `根据这次会话建议我新增哪些用户习惯短句`, `添加第1条`, `把第1条加到 session_close 场景`, `忽略第1条`, `删除用户习惯短句`, or asks to inspect current user habit phrases from inside the current Codex app thread.
 ---
 
 # Manage Current Session Habits
@@ -37,7 +37,7 @@ user: 收尾一下
 ```
 
 5. Summarize the returned candidates in plain language: candidate id, phrase, suggested intent if any, confidence, and risk flags.
-6. End the message with natural follow-up prompts the user can say next, such as `添加第1条` or `把第2条加到 session_close 场景`.
+6. End the message with natural follow-up prompts the user can say next, such as `添加第1条`, `把第2条加到 session_close 场景`, or `忽略第3条`.
 7. Do not auto-add anything during the scan step.
 
 ## Confirm A Candidate
@@ -47,6 +47,7 @@ When the user explicitly chooses a candidate, run the same natural-language requ
 ```powershell
 & E:\manage-current-session-habits\scripts\invoke-backend.ps1 -Request "添加第1条"
 & E:\manage-current-session-habits\scripts\invoke-backend.ps1 -Request "把第1条加到 session_close 场景"
+& E:\manage-current-session-habits\scripts\invoke-backend.ps1 -Request "忽略第1条"
 ```
 
 If the candidate is review-only and the user supplies meaning explicitly, keep that override in the request:

@@ -16,6 +16,7 @@ When the backend returns candidates:
 3. End with short next-step prompts the user can copy naturally:
    - `添加第1条`
    - `把第2条加到 session_close 场景`
+   - `忽略第3条`
    - `删除用户习惯短句: 收尾一下`
 
 If there are no candidates, say that clearly and avoid inventing next actions.
@@ -27,6 +28,14 @@ When a candidate is added successfully:
 1. Confirm the phrase that was added.
 2. Echo the resolved `intent`, `scenario_bias`, and `confidence`.
 3. Keep the wording short and explicit so the user can trust what changed.
+
+## After Ignore
+
+When a candidate is ignored successfully:
+
+1. Confirm which phrase was suppressed.
+2. Say that it will be skipped by future suggestion scans.
+3. Do not imply that it became an active habit.
 
 ## After List
 

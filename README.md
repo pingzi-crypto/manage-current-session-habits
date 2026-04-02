@@ -12,6 +12,7 @@ It is designed for the flow where the user wants to stay inside the current conv
 - `根据这次会话建议我新增哪些用户习惯短句`
 - `添加第1条`
 - `把第1条加到 session_close 场景`
+- `忽略第1条`
 - `列出用户习惯短句`
 - `删除用户习惯短句: 收尾一下`
 
@@ -60,8 +61,8 @@ for machine-local backend resolution.
 2. The skill builds a role-prefixed transcript from visible thread context.
 3. The skill pipes that transcript into [invoke-backend.ps1](/E:/manage-current-session-habits/scripts/invoke-backend.ps1).
 4. The backend returns reviewable candidates without auto-writing new rules.
-5. The skill replies with a short candidate summary plus natural next-step prompts such as `添加第1条`.
-6. The user explicitly confirms a candidate with a short follow-up prompt such as `添加第1条`.
+5. The skill replies with a short candidate summary plus natural next-step prompts such as `添加第1条` or `忽略第1条`.
+6. The user explicitly confirms a candidate with a short follow-up prompt such as `添加第1条` or suppresses a noisy one with `忽略第1条`.
 
 Typical wrapper invocation:
 
