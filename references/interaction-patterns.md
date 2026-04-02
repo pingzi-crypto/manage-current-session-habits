@@ -39,8 +39,8 @@ Preferred scan example:
 
 ```markdown
 这次会话共发现 2 条习惯候选：
-1. `c1`「收尾一下」，意图 `close_session`，建议添加，置信度 0.84；Explicit phrase-to-intent definition found, but the scenario is still general.；评分依据：未提供明确场景，保持通用候选；风险：场景未指定
-2. `c2`「收工啦」，尚无显式意图，复核候选，置信度 0.55；Repeated short phrase surfaced for review, not direct activation.；评分依据：当前会话重复带来加分 0.00，仅来自当前会话，暂不直接提升为可自动添加；风险：仅单会话证据、缺少显式 intent
+1. `c1`「收尾一下」，意图 `close_session`，建议添加，置信度 0.84；会话里出现了明确的短句定义，但场景仍然偏通用。；评分依据：未提供明确场景，保持通用候选；风险：场景未指定
+2. `c2`「收工啦」，尚无显式意图，复核候选，置信度 0.55；当前会话里短句重复出现，值得复核，但还不适合直接启用。；评分依据：当前会话重复带来加分 0.00，仅来自当前会话，暂不直接提升为可自动添加；风险：仅单会话证据、缺少显式 intent
 
 你接下来可以直接说：
 - `添加第1条`
