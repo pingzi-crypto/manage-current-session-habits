@@ -1,4 +1,4 @@
 {
-  "backend_repo_path": "E:\\user-habit-pipeline",
-  "bridge_cli_path": "E:\\user-habit-pipeline\\src\\codex-session-habits-cli.js"
+  "backend_repo_path": "D:\\path\\to\\user-habit-pipeline",
+  "bridge_cli_path": "D:\\path\\to\\user-habit-pipeline\\src\\codex-session-habits-cli.js"
 }

@@ -23,7 +23,7 @@ if ($threadSources.Count -gt 1) {
 
 $resolvedConfigPath = [System.IO.Path]::GetFullPath($ConfigPath)
 if (!(Test-Path -LiteralPath $resolvedConfigPath)) {
-  throw "Missing local config at $resolvedConfigPath. Run scripts/install-skill.ps1 first."
+  throw "Missing local config at $resolvedConfigPath. Run scripts/install-skill.ps1 -BackendRepoPath <path> first."
 }
 
 $config = Get-Content -Raw -LiteralPath $resolvedConfigPath | ConvertFrom-Json

@@ -1,13 +1,55 @@
 param(
-  [string]$SkillRepoPath = "E:\manage-current-session-habits",
-  [string]$CodexSkillsRoot = "C:\Users\pz\.codex\skills",
-  [string]$BackendRepoPath = "E:\user-habit-pipeline"
+  [string]$SkillRepoPath,
+  [string]$CodexSkillsRoot,
+  [string]$BackendRepoPath
 )
+
+function Get-DefaultCodexSkillsRoot {
+  if ($env:CODEX_HOME) {
+    return (Join-Path $env:CODEX_HOME "skills")
+  }
+
+  if ($env:USERPROFILE) {
+    return (Join-Path $env:USERPROFILE ".codex\\skills")
+  }
+
+  throw "Unable to determine Codex skills root. Set CODEX_HOME or pass -CodexSkillsRoot."
+}
+
+function Resolve-BackendRepoPath {
+  param(
+    [string]$ProvidedPath,
+    [string]$SkillRepoPath
+  )
+
+  if ($ProvidedPath) {
+    return (Resolve-Path -LiteralPath $ProvidedPath).Path
+  }
+
+  if ($env:USER_HABIT_PIPELINE_REPO) {
+    return (Resolve-Path -LiteralPath $env:USER_HABIT_PIPELINE_REPO).Path
+  }
+
+  $siblingCandidate = Join-Path (Split-Path -Path $SkillRepoPath -Parent) "user-habit-pipeline"
+  if (Test-Path -LiteralPath $siblingCandidate) {
+    return (Resolve-Path -LiteralPath $siblingCandidate).Path
+  }
+
+  throw "Backend repo path is required. Pass -BackendRepoPath or set USER_HABIT_PIPELINE_REPO."
+}
 
 $ErrorActionPreference = "Stop"
 
+if (-not $SkillRepoPath) {
+  $SkillRepoPath = (Join-Path $PSScriptRoot "..")
+}
+
+if (-not $CodexSkillsRoot) {
+  $CodexSkillsRoot = Get-DefaultCodexSkillsRoot
+}
+
 $resolvedRepoPath = (Resolve-Path -LiteralPath $SkillRepoPath).Path
-$resolvedBackendRepoPath = (Resolve-Path -LiteralPath $BackendRepoPath).Path
+$resolvedBackendRepoPath = Resolve-BackendRepoPath -ProvidedPath $BackendRepoPath -SkillRepoPath $resolvedRepoPath
 $skillName = Split-Path -Path $resolvedRepoPath -Leaf
 $targetPath = Join-Path $CodexSkillsRoot $skillName
 $configDir = Join-Path $resolvedRepoPath "config"
@@ -49,3 +91,4 @@ if (Test-Path -LiteralPath $targetPath) {
 New-Item -ItemType Junction -Path $targetPath -Target $resolvedRepoPath | Out-Null
 Write-Output "Installed skill link: $targetPath -> $resolvedRepoPath"
 Write-Output "Wrote local config: $configPath"
+Write-Output "Using backend repo: $resolvedBackendRepoPath"
