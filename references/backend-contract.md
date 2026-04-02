@@ -66,6 +66,13 @@ Use these after a successful scan:
 
 The bridge CLI reuses the latest local suggestion cache, so these requests do not need transcript input unless the cache is missing.
 
+On successful bridge responses, the Codex-facing CLI may also include presentation-oriented fields:
+
+- `assistant_reply_markdown`
+- `suggested_follow_ups`
+
+These are intended for chat UI rendering and do not replace the structured JSON fields.
+
 ## Local Install Target
 
 The preferred installed location is:

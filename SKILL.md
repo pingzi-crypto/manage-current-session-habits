@@ -37,6 +37,7 @@ user: 收尾一下
 ```
 
 5. Summarize the returned candidates in plain language: candidate id, phrase, suggested intent if any, confidence, and risk flags.
+   Prefer the backend-provided `assistant_reply_markdown` and `suggested_follow_ups` fields when present.
 6. End the message with natural follow-up prompts the user can say next, such as `添加第1条`, `把第2条加到 session_close 场景`, or `忽略第3条`.
 7. Do not auto-add anything during the scan step.
 
@@ -58,6 +59,7 @@ If the candidate is review-only and the user supplies meaning explicitly, keep t
 
 If the cache is missing, tell the user to scan the current conversation first.
 After a successful apply, explicitly echo the saved phrase, intent, scenario, and confidence.
+Prefer the backend-provided `assistant_reply_markdown` when present so the confirmation wording stays consistent with the bridge output.
 
 ## Other Requests
 

@@ -7,6 +7,7 @@ Use these response patterns to keep the skill easy to operate inside a normal Co
 When the backend returns candidates:
 
 1. Summarize each candidate briefly.
+   Prefer `assistant_reply_markdown` directly when the backend provides it.
 2. Include:
    - candidate id
    - phrase
@@ -27,7 +28,8 @@ When a candidate is added successfully:
 
 1. Confirm the phrase that was added.
 2. Echo the resolved `intent`, `scenario_bias`, and `confidence`.
-3. Keep the wording short and explicit so the user can trust what changed.
+3. Prefer the backend-provided `assistant_reply_markdown` when present.
+4. Keep the wording short and explicit so the user can trust what changed.
 
 ## After Ignore
 
