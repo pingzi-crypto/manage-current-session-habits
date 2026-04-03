@@ -103,14 +103,43 @@ if ($SmokeTest) {
   New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
   $tempRegistry = Join-Path $tempDir "user_habits.json"
   $invokeScriptPath = Join-Path $resolvedRepoPath "scripts\\invoke-backend.ps1"
+  $sampleTranscript = @'
+user: 以后我说“收尾一下”就是 close_session 场景=session_close
+assistant: 收到。
+user: 收尾一下
+'@
 
   try {
-    $smokeOutput = & $invokeScriptPath -Request "列出用户习惯短句" -UserRegistryPath $tempRegistry
-    $parsed = $smokeOutput | ConvertFrom-Json
-    if ($parsed.action -ne "list") {
-      throw "Smoke test returned unexpected action: $($parsed.action)"
+    $listOutput = & $invokeScriptPath -Request "列出用户习惯短句" -UserRegistryPath $tempRegistry
+    $listParsed = $listOutput | ConvertFrom-Json
+    if ($listParsed.action -ne "list") {
+      throw "Smoke test list step returned unexpected action: $($listParsed.action)"
     }
-    Add-Check -Name "smoke_test" -Status "ok" -Detail "Wrapper invocation succeeded."
+
+    $scanOutput = & $invokeScriptPath -Request "扫描这次会话里的习惯候选" -Transcript $sampleTranscript -UserRegistryPath $tempRegistry
+    $scanParsed = $scanOutput | ConvertFrom-Json
+    if ($scanParsed.action -ne "suggest") {
+      throw "Smoke test scan step returned unexpected action: $($scanParsed.action)"
+    }
+
+    if ($scanParsed.candidate_count -lt 1) {
+      throw "Smoke test scan step returned no candidates."
+    }
+
+    if (-not $scanParsed.assistant_reply_markdown) {
+      throw "Smoke test scan step did not return assistant_reply_markdown."
+    }
+
+    if (-not $scanParsed.suggested_follow_ups) {
+      throw "Smoke test scan step did not return suggested_follow_ups."
+    }
+
+    if (-not $scanParsed.next_step_assessment) {
+      throw "Smoke test scan step did not return next_step_assessment."
+    }
+
+    Add-Check -Name "smoke_test_list" -Status "ok" -Detail "Wrapper list invocation succeeded."
+    Add-Check -Name "smoke_test_scan" -Status "ok" -Detail "Wrapper scan invocation succeeded with chat-ready bridge fields."
   } finally {
     if (Test-Path -LiteralPath $tempDir) {
       Remove-Item -LiteralPath $tempDir -Recurse -Force

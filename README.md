@@ -53,6 +53,7 @@ This distinction matters for sharing and future marketplace use:
 - [SKILL.md](/E:/manage-current-session-habits/SKILL.md): skill instructions loaded by Codex
 - [agents/openai.yaml](/E:/manage-current-session-habits/agents/openai.yaml): UI-facing skill metadata
 - [references/backend-contract.md](/E:/manage-current-session-habits/references/backend-contract.md): backend command contract and install path
+- [references/release-checklist.md](/E:/manage-current-session-habits/references/release-checklist.md): release and marketplace-readiness checklist
 - [references/interaction-patterns.md](/E:/manage-current-session-habits/references/interaction-patterns.md): response and follow-up phrasing guidance
 - [scripts/install-skill.ps1](/E:/manage-current-session-habits/scripts/install-skill.ps1): local install helper for Codex skill discovery
 - [scripts/check-install.ps1](/E:/manage-current-session-habits/scripts/check-install.ps1): local install verifier and optional smoke test
@@ -128,6 +129,11 @@ Verify the install and config:
 & .\scripts\check-install.ps1 -SmokeTest
 ```
 
+The smoke check now verifies both:
+
+- wrapper `list` flow
+- wrapper current-session `scan` flow with chat-ready bridge fields
+
 ## Install On Another Machine
 
 Typical setup sequence:
@@ -196,6 +202,10 @@ If this skill is prepared for a marketplace or wider sharing, keep these rules:
 - keep the wrapper contract stable
 - keep the backend dependency explicit rather than hidden
 - keep this skill's docs aligned with `<user-habit-pipeline>/docs/codex-current-session-contract.md` when bridge fields or errors change
+
+Before sharing or publishing, run:
+
+- [references/release-checklist.md](/E:/manage-current-session-habits/references/release-checklist.md)
 
 ## Notes
 
