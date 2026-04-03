@@ -1,4 +1,4 @@
 interface:
-  display_name: "Session Habit Manager"
-  short_description: "Scan and confirm habit phrases in the current Codex thread"
-  default_prompt: "Use $manage-current-session-habits when the user wants to scan this conversation for habit candidates, add 第1条, ignore 第1条, or list/delete existing user habit phrases without leaving the current Codex thread."
+  display_name: "Current Session Habits"
+  short_description: "Scan this Codex thread for habit candidates and confirm or ignore them in place"
+  default_prompt: "Use $manage-current-session-habits when the user wants to scan the current conversation for repeated shorthand or explicit phrase definitions, add or ignore 第N条 candidates, list or delete existing user habit phrases, or stop low-value habit cleanup without leaving the current thread."

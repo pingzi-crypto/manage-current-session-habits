@@ -2,6 +2,18 @@
 
 Codex skill for scanning the current Codex conversation for habit phrase candidates and confirming additions into the `user-habit-pipeline` overlay.
 
+## Why Install This Skill
+
+Install this skill if you want the habit-management flow to feel native inside Codex instead of script-driven.
+
+What it optimizes for:
+
+- trigger from a normal conversation with one short prompt
+- reuse the current visible thread as the transcript source
+- keep explicit confirmation for add / ignore / remove actions
+- avoid asking the user to find private session files on disk
+- preserve low-ROI stop behavior when the current cleanup direction is no longer worth extending
+
 ## What This Skill Does
 
 This skill is a thin Codex-app integration layer.
@@ -18,6 +30,21 @@ It is designed for the flow where the user wants to stay inside the current conv
 
 The skill itself does not implement habit interpretation logic.
 It delegates that work to a configured `user-habit-pipeline` backend through a local wrapper script in this repository.
+
+## What This Skill Does Not Do
+
+This skill does not:
+
+- auto-save habits during scan-only flows
+- execute downstream workflow actions
+- read Codex private thread storage directly
+- replace the backend contract as the source of truth
+
+Short form:
+
+- this skill gathers and forwards current-thread context
+- the backend interprets and returns the structured result
+- the user still explicitly confirms durable changes
 
 ## Public Contract vs Local Config
 
@@ -182,6 +209,29 @@ user: 收尾一下
 '@
 & .\scripts\invoke-backend.ps1 -Request "扫描这次会话里的习惯候选" -Transcript $transcript
 ```
+
+## Example Conversation
+
+Typical end-user flow inside Codex:
+
+```text
+user: 扫描这次会话里的习惯候选
+assistant: 这次会话共发现 1 条习惯候选……
+assistant: 你接下来可以直接说：添加第1条 / 忽略第1条 / 把第1条加到 session_close 场景
+user: 添加第1条
+assistant: 已添加用户习惯短句「收尾一下」……
+user: 停
+assistant: 当前这个方向先停。
+```
+
+Typical trigger phrases:
+
+- `扫描这次会话里的习惯候选`
+- `根据这次会话建议我新增哪些用户习惯短句`
+- `添加第1条`
+- `忽略第1条`
+- `列出用户习惯短句`
+- `删除用户习惯短句: 收尾一下`
 
 ## Sharing And Publishing Notes
 
