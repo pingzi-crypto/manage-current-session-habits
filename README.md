@@ -2,6 +2,25 @@
 
 Codex skill for scanning the current Codex conversation for habit phrase candidates and confirming additions into the `user-habit-pipeline` overlay.
 
+## Quick Start
+
+1. Clone this repository and `user-habit-pipeline`.
+2. Run:
+
+```powershell
+& .\scripts\install-skill.ps1 -BackendRepoPath D:\path\to\user-habit-pipeline
+& .\scripts\check-install.ps1 -SmokeTest
+```
+
+3. In a normal Codex conversation, say one of:
+
+- `扫描这次会话里的习惯候选`
+- `添加第1条`
+- `忽略第1条`
+- `列出用户习惯短句`
+
+If the smoke check passes, the skill is installed correctly and the current-session bridge path is working.
+
 ## Why Install This Skill
 
 Install this skill if you want the habit-management flow to feel native inside Codex instead of script-driven.
@@ -13,6 +32,12 @@ What it optimizes for:
 - keep explicit confirmation for add / ignore / remove actions
 - avoid asking the user to find private session files on disk
 - preserve low-ROI stop behavior when the current cleanup direction is no longer worth extending
+
+Best fit:
+
+- you already use Codex as the main UI
+- you want current-thread scanning instead of file-hunting
+- you want explicit review and confirmation before anything is saved
 
 ## What This Skill Does
 
