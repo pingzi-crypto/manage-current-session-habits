@@ -8,6 +8,7 @@ Use this checklist before sharing this skill repo with another user or treating 
 - Confirm [references/backend-contract.md](/E:/manage-current-session-habits/references/backend-contract.md) still matches the configured backend bridge contract.
 - If the backend checkout changed its bridge request or response shape, update this skill repo in the same change set.
 - If the backend checkout includes `docs/codex-current-session-contract.md`, confirm this repo still aligns to it.
+- If this release is meant to ship together with the backend repo, also run [cross-repo-release-checklist.md](/E:/user-habit-pipeline/docs/cross-repo-release-checklist.md).
 
 ## Install And Smoke Checks
 
