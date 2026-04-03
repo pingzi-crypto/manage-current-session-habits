@@ -33,6 +33,10 @@ Public contract:
 - [scripts/invoke-backend.ps1](/E:/manage-current-session-habits/scripts/invoke-backend.ps1)
 - [references/backend-contract.md](/E:/manage-current-session-habits/references/backend-contract.md)
 
+Upstream backend contract source:
+
+- `<user-habit-pipeline>/docs/codex-current-session-contract.md`
+
 Machine-local state:
 
 - `config/local-config.json`
@@ -159,7 +163,7 @@ If the backend location changes later, rerun the install script instead of editi
 2. The skill builds a role-prefixed transcript from visible thread context.
 3. The skill pipes that transcript into [invoke-backend.ps1](/E:/manage-current-session-habits/scripts/invoke-backend.ps1).
 4. The backend returns reviewable candidates without auto-writing new rules.
-5. The skill prefers the backend's chat-ready `assistant_reply_markdown` and `suggested_follow_ups` fields, so it can reply with a short candidate summary plus natural next-step prompts such as `添加第1条` or `忽略第1条`.
+5. The skill prefers the backend's chat-ready `assistant_reply_markdown`, `suggested_follow_ups`, and `next_step_assessment` fields, so it can reply with a short candidate summary plus natural next-step prompts such as `添加第1条` or `忽略第1条` without re-deriving the same judgment locally.
 6. The user explicitly confirms a candidate with a short follow-up prompt such as `添加第1条` or suppresses a noisy one with `忽略第1条`.
 
 Typical wrapper invocation:
@@ -183,6 +187,7 @@ Current portability rules:
 - backend location is resolved from a parameter, environment variable, or sibling repo
 - machine-local path binding is stored in `config/local-config.json`
 - the tracked `config/example.local-config.json` is only a template
+- the backend checkout remains the source of truth for the current-session bridge request/response contract
 
 If this skill is prepared for a marketplace or wider sharing, keep these rules:
 
@@ -190,6 +195,7 @@ If this skill is prepared for a marketplace or wider sharing, keep these rules:
 - keep local addresses in generated config only
 - keep the wrapper contract stable
 - keep the backend dependency explicit rather than hidden
+- keep this skill's docs aligned with `<user-habit-pipeline>/docs/codex-current-session-contract.md` when bridge fields or errors change
 
 ## Notes
 

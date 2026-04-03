@@ -9,6 +9,7 @@ Use this skill to keep the user inside the current Codex conversation while driv
 
 Read [backend-contract.md](./references/backend-contract.md) when you need the exact bridge command contract or install layout.
 Read [interaction-patterns.md](./references/interaction-patterns.md) when you need the response format for scan/apply/list flows.
+If the configured backend checkout includes `docs/codex-current-session-contract.md`, treat that backend document as the upstream source of truth for the current-session bridge contract and keep this skill aligned to it.
 
 ## Workflow
 
@@ -17,6 +18,7 @@ Read [interaction-patterns.md](./references/interaction-patterns.md) when you ne
 3. For suggestion scans, build a concise role-prefixed transcript from the visible thread context and pass it to the wrapper script in this repository.
 4. For follow-up confirmations such as `添加第1条`, reuse the latest local suggestion cache and do not ask for the transcript again unless the cache is missing.
 5. If the wrapper script reports missing local config, tell the user to refresh the install with `scripts/install-skill.ps1 -BackendRepoPath <path>`.
+6. Never ask the user to inspect or guess Codex private thread-storage paths.
 
 ## Response Priority
 
@@ -24,7 +26,8 @@ When the bridge returns successful JSON:
 
 1. If `assistant_reply_markdown` is present, use it as the primary user-facing reply.
 2. If `suggested_follow_ups` is present, surface those prompts directly instead of inventing different wording.
-3. Only synthesize your own wording when the bridge did not provide presentation fields or when a tiny clarification is required for local context.
+3. If `next_step_assessment` is present, honor it instead of overriding the bridge's stop/continue judgment with a new improvised suggestion.
+4. Only synthesize your own wording when the bridge did not provide presentation fields or when a tiny clarification is required for local context.
 
 Do not restate the full raw JSON unless the user explicitly asks for it.
 Do not replace backend wording with a looser paraphrase unless the backend reply is clearly insufficient for the current turn.
@@ -69,6 +72,7 @@ user: 收尾一下
 
 5. Summarize the returned candidates in plain language: candidate id, phrase, suggested intent if any, confidence, and risk flags.
    Prefer the backend-provided `assistant_reply_markdown` and `suggested_follow_ups` fields when present.
+   If the bridge also returns `next_step_assessment`, preserve that direction in the visible reply.
 6. End the message with natural follow-up prompts the user can say next, such as `添加第1条`, `把第2条加到 session_close 场景`, or `忽略第3条`.
 7. Do not auto-add anything during the scan step.
 
@@ -102,6 +106,7 @@ Preferred apply reply behavior:
 
 - first choice: return `assistant_reply_markdown` directly
 - if the backend also returned `suggested_follow_ups`, prefer those follow-ups over newly invented ones
+- if the backend returned `next_step_assessment.level = low_roi`, do not append more busywork after the bridge already offered a stop path
 - do not imply the phrase will execute any downstream workflow automatically
 
 ## Other Requests
@@ -119,3 +124,4 @@ For `list`, `remove`, and `ignore` requests, follow the same rule:
 
 - prefer `assistant_reply_markdown` when present
 - otherwise keep the reply short, explicit, and action-oriented
+- if the wrapper surfaces a bridge contract error such as conflicting thread sources or missing thread input for a scan, report that error directly instead of paraphrasing it into a looser suggestion

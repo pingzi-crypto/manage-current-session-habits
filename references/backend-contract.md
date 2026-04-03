@@ -1,5 +1,8 @@
 # Backend Contract
 
+When the configured backend checkout includes `docs/codex-current-session-contract.md`, that document is the upstream source of truth for the current-session bridge contract.
+This file is the skill-repo-facing summary and should stay aligned to it.
+
 ## Backend Location
 
 This skill reads its machine-local backend path from:
@@ -70,8 +73,43 @@ On successful bridge responses, the Codex-facing CLI may also include presentati
 
 - `assistant_reply_markdown`
 - `suggested_follow_ups`
+- `next_step_assessment`
 
 These are intended for chat UI rendering and do not replace the structured JSON fields.
+
+Current `next_step_assessment.level` values used by the backend bridge:
+
+- `actionable`
+- `low_roi`
+- `stopped`
+- `unknown`
+
+If `level = low_roi`, prefer the bridge-provided stop wording and follow-ups over any new skill-invented next step.
+If `level = stopped`, treat the current direction as ended locally and do not push additional habit-management follow-ups.
+
+## Current Error Boundaries
+
+Treat these as bridge contract errors rather than normal conversational ambiguity:
+
+- missing `--request`
+- conflicting thread sources
+- running a current-session scan without any thread source
+- empty stdin when `--thread-stdin` is used
+- malformed request text that the backend parser rejects
+
+Current scan-specific rule:
+
+- current-session scans require exactly one thread source
+
+That means:
+
+- valid: `-Transcript`
+- valid: `-ThreadPath`
+- valid: `-ThreadStdin`
+- invalid: no thread input for a scan
+- invalid: more than one thread input mode at once
+
+When these happen, surface the backend or wrapper error clearly instead of paraphrasing it into a softer suggestion.
 
 ## Local Install Target
 
