@@ -26,6 +26,9 @@ If you want habit management to happen inside the normal Codex thread instead of
 
 If the smoke check passes, the current-session bridge is installed correctly.
 
+Non-Windows note:
+the install and check scripts now support PowerShell 7 on macOS and Linux, but the repository is currently only smoke-verified on Windows.
+
 ## What It Does
 
 - scans the current visible Codex thread for habit candidates
