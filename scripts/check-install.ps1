@@ -5,16 +5,57 @@ param(
   [switch]$SmokeTest
 )
 
+function Get-HomeDirectory {
+  if ($env:HOME) {
+    return $env:HOME
+  }
+
+  if ($env:USERPROFILE) {
+    return $env:USERPROFILE
+  }
+
+  throw "Unable to determine the user home directory. Set HOME, USERPROFILE, CODEX_HOME, or pass -CodexSkillsRoot."
+}
+
 function Get-DefaultCodexSkillsRoot {
   if ($env:CODEX_HOME) {
     return (Join-Path $env:CODEX_HOME "skills")
   }
 
-  if ($env:USERPROFILE) {
-    return (Join-Path $env:USERPROFILE ".codex\\skills")
+  return (Join-Path (Join-Path (Get-HomeDirectory) ".codex") "skills")
+}
+
+function Resolve-InstalledTargetPaths {
+  param(
+    [string]$InstalledPath,
+    [System.IO.FileSystemInfo]$Item
+  )
+
+  if (-not $Item -or -not $Item.LinkType) {
+    return @()
   }
 
-  throw "Unable to determine Codex skills root. Set CODEX_HOME or pass -CodexSkillsRoot."
+  $linkParentPath = Split-Path -Path $InstalledPath -Parent
+  $resolvedTargets = New-Object System.Collections.Generic.List[string]
+
+  foreach ($rawTarget in @($Item.Target)) {
+    if ([string]::IsNullOrWhiteSpace([string]$rawTarget)) {
+      continue
+    }
+
+    $candidateTarget = [string]$rawTarget
+    if (-not [System.IO.Path]::IsPathRooted($candidateTarget)) {
+      $candidateTarget = Join-Path $linkParentPath $candidateTarget
+    }
+
+    try {
+      $resolvedTargets.Add((Resolve-Path -LiteralPath $candidateTarget).Path) | Out-Null
+    } catch {
+      $resolvedTargets.Add([System.IO.Path]::GetFullPath($candidateTarget)) | Out-Null
+    }
+  }
+
+  return $resolvedTargets
 }
 
 $ErrorActionPreference = "Stop"
@@ -32,7 +73,7 @@ $skillName = Split-Path -Path $resolvedRepoPath -Leaf
 $installedSkillPath = Join-Path $CodexSkillsRoot $skillName
 
 if (-not $ConfigPath) {
-  $ConfigPath = Join-Path $resolvedRepoPath "config\\local-config.json"
+  $ConfigPath = Join-Path (Join-Path $resolvedRepoPath "config") "local-config.json"
 }
 
 $resolvedConfigPath = [System.IO.Path]::GetFullPath($ConfigPath)
@@ -60,10 +101,12 @@ if (!(Test-Path -LiteralPath $installedSkillPath)) {
 }
 
 $installedSkill = Get-Item -LiteralPath $installedSkillPath -Force
+$resolvedInstalledTargetPaths = Resolve-InstalledTargetPaths -InstalledPath $installedSkillPath -Item $installedSkill
 if (-not $installedSkill.LinkType) {
-  Add-Check -Name "skill_link" -Status "warn" -Detail "Installed path exists but is not a link/junction: $installedSkillPath"
-} elseif ($installedSkill.Target -notcontains $resolvedRepoPath) {
-  Add-Check -Name "skill_link" -Status "warn" -Detail "Installed skill points to $($installedSkill.Target -join ', '), expected $resolvedRepoPath"
+  Add-Check -Name "skill_link" -Status "warn" -Detail "Installed path exists but is not a link: $installedSkillPath"
+} elseif ($resolvedInstalledTargetPaths -notcontains $resolvedRepoPath) {
+  $targetDetail = if ($null -eq $installedSkill.Target) { "<unknown>" } elseif ($installedSkill.Target -is [System.Array]) { $installedSkill.Target -join ", " } else { [string]$installedSkill.Target }
+  Add-Check -Name "skill_link" -Status "warn" -Detail "Installed skill points to $targetDetail, expected $resolvedRepoPath"
 } else {
   Add-Check -Name "skill_link" -Status "ok" -Detail "$installedSkillPath -> $resolvedRepoPath"
 }
@@ -99,10 +142,10 @@ $nodeCommand = Get-Command node -ErrorAction Stop
 Add-Check -Name "node" -Status "ok" -Detail $nodeCommand.Source
 
 if ($SmokeTest) {
-  $tempDir = Join-Path $env:TEMP ('manage-current-session-habits-check-' + [System.Guid]::NewGuid().ToString('N'))
+  $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ('manage-current-session-habits-check-' + [System.Guid]::NewGuid().ToString('N'))
   New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
   $tempRegistry = Join-Path $tempDir "user_habits.json"
-  $invokeScriptPath = Join-Path $resolvedRepoPath "scripts\\invoke-backend.ps1"
+  $invokeScriptPath = Join-Path (Join-Path $resolvedRepoPath "scripts") "invoke-backend.ps1"
   $sampleTranscript = @'
 user: 以后我说“收尾一下”就是 close_session 场景=session_close
 assistant: 收到。

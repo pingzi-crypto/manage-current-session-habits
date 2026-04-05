@@ -9,14 +9,15 @@ If you want habit management to happen inside the normal Codex thread instead of
 ## Quick Start
 
 1. Clone this repository and `user-habit-pipeline`.
-2. Run:
+2. Make sure `pwsh` and `node` are available on `PATH`.
+3. Run:
 
 ```powershell
-& .\scripts\install-skill.ps1 -BackendRepoPath D:\path\to\user-habit-pipeline
+& .\scripts\install-skill.ps1 -BackendRepoPath /path/to/user-habit-pipeline
 & .\scripts\check-install.ps1 -SmokeTest
 ```
 
-3. In a normal Codex conversation, say:
+4. In a normal Codex conversation, say:
 
 - `扫描这次会话里的习惯候选`
 - `添加第1条`
