@@ -21,6 +21,8 @@ Codex skill for scanning the current Codex conversation for habit phrase candida
 
 If the smoke check passes, the skill is installed correctly and the current-session bridge path is working.
 
+![README short demo](assets/readme-short-demo.gif)
+
 ## Why Install This Skill
 
 Install this skill if you want the habit-management flow to feel native inside Codex instead of script-driven.

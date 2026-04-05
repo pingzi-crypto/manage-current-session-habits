@@ -7,7 +7,7 @@ It is meant to turn the existing publishing kit into a concrete production check
 
 ## Goal
 
-Produce demo materials that let a first-time viewer understand, in under 90 seconds:
+Produce demo materials that let a first-time viewer understand the skill quickly, with one README-safe short demo and one optional longer external walkthrough:
 
 - what the skill does
 - how it is triggered inside a normal Codex conversation
@@ -32,13 +32,15 @@ If any of these are missing, the demo set is incomplete.
 
 Produce at least:
 
-- 1 short recording
+- 1 README-safe short recording
+- 1 optional longer walkthrough recording when a fuller explanation surface is useful
 - 5 screenshots
 - 1 saved demo-thread transcript or recording script
 
 Recommended structure:
 
-- `demo-video-short`
+- `demo-video-readme-short`
+- `demo-video-walkthrough`
 - `screenshot-01-readme-quick-start`
 - `screenshot-02-thread-before-scan`
 - `screenshot-03-scan-result`
@@ -49,8 +51,8 @@ Recommended structure:
 
 Target length:
 
-- short version: 30 to 45 seconds
-- full version: 60 to 90 seconds
+- README short loop: 8 to 15 seconds
+- external walkthrough: 25 to 40 seconds
 
 Recommended sequence:
 
@@ -64,6 +66,31 @@ Recommended sequence:
 6. optionally type `列出用户习惯短句`
 7. type `停`
 8. show that the current low-ROI direction stops cleanly
+
+### README Short Loop
+
+For GitHub README or any inline embed, keep the loop extremely short.
+
+Recommended order:
+
+1. `扫描这次会话里的习惯候选`
+2. candidate result appears
+3. `添加第1条`
+4. confirmation appears
+5. `停`
+6. stop confirmation appears
+
+This is the best default for a looping GIF or a short inline video.
+
+### External Walkthrough
+
+For release posts, social sharing, or standalone demo links, use the fuller version:
+
+1. scan
+2. candidate review
+3. apply
+4. optional list
+5. stop
 
 ## Screenshot Checklist
 

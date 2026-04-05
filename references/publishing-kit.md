@@ -56,9 +56,33 @@ It lets me stay inside the current Codex thread and say things like:
 
 Instead of finding session files or running manual backend commands, the skill forwards the visible conversation into `user-habit-pipeline`, returns reviewable candidates, and keeps explicit confirmation for anything durable.
 
-## 30-Second Demo Script
+## README Demo Script
 
-Use this when recording or demonstrating the skill:
+Use this for an inline README GIF or short embedded clip.
+
+Target length:
+
+- 8 to 15 seconds
+
+Recommended sequence:
+
+1. Type:
+   - `扫描这次会话里的习惯候选`
+2. Show the returned candidate summary briefly
+3. Type:
+   - `添加第1条`
+4. Show the confirmation reply briefly
+5. Type:
+   - `停`
+6. Show the stop confirmation reply
+
+## External Demo Script
+
+Use this for a fuller release post, external demo clip, or standalone walkthrough.
+
+Target length:
+
+- 25 to 40 seconds
 
 1. Show a normal Codex conversation with a repeated short phrase or an explicit phrase definition already in the thread.
 2. Type:
