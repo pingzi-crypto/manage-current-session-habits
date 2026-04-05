@@ -1,3 +1,17 @@
 .DS_Store
 Thumbs.db
 config/local-config.json
+.codex/
+handoff/
+docs/handoff/
+docs/architecture/
+*handoff*.md
+*architecture*.md
+references/backend-contract.md
+references/demo-material-requirements.md
+references/github-release-draft.md
+references/interaction-patterns.md
+references/publishing-kit.md
+references/readme-short-demo.html
+references/release-checklist.md
+scripts/open-readme-demo.ps1

@@ -1,6 +1,10 @@
 # manage-current-session-habits
 
-Codex skill for scanning the current Codex conversation for habit phrase candidates and confirming additions into the `user-habit-pipeline` overlay.
+Codex skill for scanning the current conversation for user habit phrase candidates and confirming them in place through `user-habit-pipeline`.
+
+If you want habit management to happen inside the normal Codex thread instead of through transcript-file hunting or manual backend commands, this is the thin integration layer for that flow.
+
+![README short demo](assets/readme-short-demo.gif)
 
 ## Quick Start
 
@@ -12,285 +16,41 @@ Codex skill for scanning the current Codex conversation for habit phrase candida
 & .\scripts\check-install.ps1 -SmokeTest
 ```
 
-3. In a normal Codex conversation, say one of:
+3. In a normal Codex conversation, say:
 
 - `扫描这次会话里的习惯候选`
 - `添加第1条`
 - `忽略第1条`
 - `列出用户习惯短句`
 
-If the smoke check passes, the skill is installed correctly and the current-session bridge path is working.
+If the smoke check passes, the current-session bridge is installed correctly.
 
-![README short demo](assets/readme-short-demo.gif)
+## What It Does
 
-## Why Install This Skill
+- scans the current visible Codex thread for habit candidates
+- lets the user confirm or ignore candidates with short follow-up prompts
+- lists or removes already saved user habit phrases
+- keeps the interaction inside the conversation UI
 
-Install this skill if you want the habit-management flow to feel native inside Codex instead of script-driven.
-
-What it optimizes for:
-
-- trigger from a normal conversation with one short prompt
-- reuse the current visible thread as the transcript source
-- keep explicit confirmation for add / ignore / remove actions
-- avoid asking the user to find private session files on disk
-- preserve low-ROI stop behavior when the current cleanup direction is no longer worth extending
-
-Best fit:
-
-- you already use Codex as the main UI
-- you want current-thread scanning instead of file-hunting
-- you want explicit review and confirmation before anything is saved
-
-## What This Skill Does
-
-This skill is a thin Codex-app integration layer.
-
-It is designed for the flow where the user wants to stay inside the current conversation and say things like:
-
-- `扫描这次会话里的习惯候选`
-- `根据这次会话建议我新增哪些用户习惯短句`
-- `添加第1条`
-- `把第1条加到 session_close 场景`
-- `忽略第1条`
-- `列出用户习惯短句`
-- `删除用户习惯短句: 收尾一下`
-
-The skill itself does not implement habit interpretation logic.
-It delegates that work to a configured `user-habit-pipeline` backend through a local wrapper script in this repository.
-
-## What This Skill Does Not Do
-
-This skill does not:
-
-- auto-save habits during scan-only flows
-- execute downstream workflow actions
-- read Codex private thread storage directly
-- replace the backend contract as the source of truth
-
-Short form:
-
-- this skill gathers and forwards current-thread context
-- the backend interprets and returns the structured result
-- the user still explicitly confirms durable changes
-
-## Public Contract vs Local Config
-
-This repository is intentionally split into:
-
-- public skill contract
-- machine-local install state
-
-Public contract:
-
-- [SKILL.md](/E:/manage-current-session-habits/SKILL.md)
-- [agents/openai.yaml](/E:/manage-current-session-habits/agents/openai.yaml)
-- [scripts/invoke-backend.ps1](/E:/manage-current-session-habits/scripts/invoke-backend.ps1)
-- [references/backend-contract.md](/E:/manage-current-session-habits/references/backend-contract.md)
-
-Upstream backend contract source:
-
-- `<user-habit-pipeline>/docs/codex-current-session-contract.md`
-
-Machine-local state:
-
-- `config/local-config.json`
-- the installed junction under the user's Codex skills directory
-
-This distinction matters for sharing and future marketplace use:
-
-- public files should stay portable
-- machine-local addresses should be generated during install
-- user-facing docs should not rely on author-machine absolute paths as the only supported contract
-
-## Repository Layout
-
-- [SKILL.md](/E:/manage-current-session-habits/SKILL.md): skill instructions loaded by Codex
-- [agents/openai.yaml](/E:/manage-current-session-habits/agents/openai.yaml): UI-facing skill metadata
-- [references/backend-contract.md](/E:/manage-current-session-habits/references/backend-contract.md): backend command contract and install path
-- [references/demo-material-requirements.md](/E:/manage-current-session-habits/references/demo-material-requirements.md): execution template for screenshots and demo recordings
-- [references/publishing-kit.md](/E:/manage-current-session-habits/references/publishing-kit.md): outward-facing listing copy and demo script
-- [references/release-checklist.md](/E:/manage-current-session-habits/references/release-checklist.md): release and marketplace-readiness checklist
-- [references/interaction-patterns.md](/E:/manage-current-session-habits/references/interaction-patterns.md): response and follow-up phrasing guidance
-- [scripts/install-skill.ps1](/E:/manage-current-session-habits/scripts/install-skill.ps1): local install helper for Codex skill discovery
-- [scripts/check-install.ps1](/E:/manage-current-session-habits/scripts/check-install.ps1): local install verifier and optional smoke test
-- [scripts/invoke-backend.ps1](/E:/manage-current-session-habits/scripts/invoke-backend.ps1): wrapper that reads local config and forwards requests
-- [config/example.local-config.json](/E:/manage-current-session-habits/config/example.local-config.json): tracked config template
-
-## Backend Dependency
-
-This skill reads the active backend path from:
-
-- `config/local-config.json`
-
-The local config is generated by the install script and points the wrapper script at the correct `src/codex-session-habits-cli.js` file in the backend repo.
-
-Backend resolution order:
-
-1. `-BackendRepoPath`
-2. `USER_HABIT_PIPELINE_REPO`
-3. a sibling folder named `user-habit-pipeline`
-
-## Requirements
-
-To use this skill on another machine, the user needs:
-
-- a local checkout of this skill repository
-- a local checkout of `user-habit-pipeline`
-- PowerShell
-- Node.js available on `PATH`
-- a Codex installation that reads skills from `CODEX_HOME\skills` or `%USERPROFILE%\.codex\skills`
-
-## Local Install
-
-Install or refresh the Codex skill entry and local backend config with:
-
-```powershell
-& .\scripts\install-skill.ps1 -BackendRepoPath D:\path\to\user-habit-pipeline
-```
-
-This creates or refreshes:
-
-- `%CODEX_HOME%\skills\manage-current-session-habits`
-- or `%USERPROFILE%\.codex\skills\manage-current-session-habits` when `CODEX_HOME` is unset
-
-as a junction pointing at this repository, and writes:
-
-- `<skill-repo>\config\local-config.json`
-
-for machine-local backend resolution.
-
-You can also set the backend path through an environment variable:
-
-```powershell
-$env:USER_HABIT_PIPELINE_REPO = 'D:\path\to\user-habit-pipeline'
-& .\scripts\install-skill.ps1
-```
-
-Preview the resolved install target without changing anything:
-
-```powershell
-& .\scripts\install-skill.ps1 -BackendRepoPath D:\path\to\user-habit-pipeline -CheckOnly
-```
-
-Force recreation of the installed junction when needed:
-
-```powershell
-& .\scripts\install-skill.ps1 -BackendRepoPath D:\path\to\user-habit-pipeline -ForceRelink
-```
-
-Verify the install and config:
-
-```powershell
-& .\scripts\check-install.ps1
-& .\scripts\check-install.ps1 -SmokeTest
-```
-
-The smoke check now verifies both:
-
-- wrapper `list` flow
-- wrapper current-session `scan` flow with chat-ready bridge fields
-
-## Install On Another Machine
-
-Typical setup sequence:
-
-1. Clone this repository to any local directory.
-2. Clone `user-habit-pipeline` to any local directory.
-3. Run the install script with the backend repo path:
-
-```powershell
-cd <skill-repo>
-& .\scripts\install-skill.ps1 -BackendRepoPath <path-to-user-habit-pipeline>
-```
-
-If you want to preview what will happen first:
-
-```powershell
-& .\scripts\install-skill.ps1 -BackendRepoPath <path-to-user-habit-pipeline> -CheckOnly
-```
-
-4. Run the install check:
-
-```powershell
-& .\scripts\check-install.ps1 -SmokeTest
-```
-
-5. Open Codex and trigger the skill from a normal conversation.
-
-If the backend location changes later, rerun the install script instead of editing `SKILL.md`.
-
-## Typical Flow
-
-1. In a Codex conversation, ask to scan the current session for habit candidates.
-2. The skill builds a role-prefixed transcript from visible thread context.
-3. The skill pipes that transcript into [invoke-backend.ps1](/E:/manage-current-session-habits/scripts/invoke-backend.ps1).
-4. The backend returns reviewable candidates without auto-writing new rules.
-5. The skill prefers the backend's chat-ready `assistant_reply_markdown`, `suggested_follow_ups`, and `next_step_assessment` fields, so it can reply with a short candidate summary plus natural next-step prompts such as `添加第1条` or `忽略第1条` without re-deriving the same judgment locally.
-6. The user explicitly confirms a candidate with a short follow-up prompt such as `添加第1条` or suppresses a noisy one with `忽略第1条`.
-
-Typical wrapper invocation:
-
-```powershell
-$transcript = @'
-user: 以后我说“收尾一下”就是 close_session
-assistant: 收到。
-user: 收尾一下
-'@
-& .\scripts\invoke-backend.ps1 -Request "扫描这次会话里的习惯候选" -Transcript $transcript
-```
-
-## Example Conversation
-
-Typical end-user flow inside Codex:
+Typical flow:
 
 ```text
 user: 扫描这次会话里的习惯候选
 assistant: 这次会话共发现 1 条习惯候选……
-assistant: 你接下来可以直接说：添加第1条 / 忽略第1条 / 把第1条加到 session_close 场景
 user: 添加第1条
 assistant: 已添加用户习惯短句「收尾一下」……
 user: 停
 assistant: 当前这个方向先停。
 ```
 
-Typical trigger phrases:
+## Product Boundary
 
-- `扫描这次会话里的习惯候选`
-- `根据这次会话建议我新增哪些用户习惯短句`
-- `添加第1条`
-- `忽略第1条`
-- `列出用户习惯短句`
-- `删除用户习惯短句: 收尾一下`
+This skill does not auto-save habits during scan-only flows.
+It does not execute downstream workflow actions.
+It forwards current-thread context to the backend, and the user still explicitly confirms durable changes.
 
-## Sharing And Publishing Notes
+## More Details
 
-This repository is designed so it can be shared without exposing one machine's path layout as a hard requirement.
-
-Current portability rules:
-
-- install location is derived from `CODEX_HOME` or `%USERPROFILE%`
-- backend location is resolved from a parameter, environment variable, or sibling repo
-- machine-local path binding is stored in `config/local-config.json`
-- the tracked `config/example.local-config.json` is only a template
-- the backend checkout remains the source of truth for the current-session bridge request/response contract
-
-If this skill is prepared for a marketplace or wider sharing, keep these rules:
-
-- do not reintroduce hardcoded author-machine absolute paths into public docs
-- keep local addresses in generated config only
-- keep the wrapper contract stable
-- keep the backend dependency explicit rather than hidden
-- keep this skill's docs aligned with `<user-habit-pipeline>/docs/codex-current-session-contract.md` when bridge fields or errors change
-
-Before sharing or publishing, run:
-
-- [references/demo-material-requirements.md](/E:/manage-current-session-habits/references/demo-material-requirements.md)
-- [references/release-checklist.md](/E:/manage-current-session-habits/references/release-checklist.md)
-- [references/publishing-kit.md](/E:/manage-current-session-habits/references/publishing-kit.md)
-
-## Notes
-
-- The source of truth for active habit rules remains the user overlay managed by `user-habit-pipeline`.
-- This repository intentionally stays small and Codex-facing.
-- If the backend path changes, rerun [install-skill.ps1](/E:/manage-current-session-habits/scripts/install-skill.ps1) instead of editing the skill instructions manually.
-- If this skill is published more broadly, the install script and generated local config should remain the only place where machine-specific paths are bound.
+- [SKILL.md](/E:/manage-current-session-habits/SKILL.md)
+- [scripts/install-skill.ps1](/E:/manage-current-session-habits/scripts/install-skill.ps1)
+- [scripts/check-install.ps1](/E:/manage-current-session-habits/scripts/check-install.ps1)

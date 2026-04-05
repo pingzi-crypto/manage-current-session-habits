@@ -7,8 +7,6 @@ description: Scan the current Codex conversation for user habit phrase candidate
 
 Use this skill to keep the user inside the current Codex conversation while driving the configured `user-habit-pipeline` backend.
 
-Read [backend-contract.md](./references/backend-contract.md) when you need the exact bridge command contract or install layout.
-Read [interaction-patterns.md](./references/interaction-patterns.md) when you need the response format for scan/apply/list flows.
 If the configured backend checkout includes `docs/codex-current-session-contract.md`, treat that backend document as the upstream source of truth for the current-session bridge contract and keep this skill aligned to it.
 
 ## Workflow
