@@ -105,6 +105,7 @@ This distinction matters for sharing and future marketplace use:
 - [SKILL.md](/E:/manage-current-session-habits/SKILL.md): skill instructions loaded by Codex
 - [agents/openai.yaml](/E:/manage-current-session-habits/agents/openai.yaml): UI-facing skill metadata
 - [references/backend-contract.md](/E:/manage-current-session-habits/references/backend-contract.md): backend command contract and install path
+- [references/demo-material-requirements.md](/E:/manage-current-session-habits/references/demo-material-requirements.md): execution template for screenshots and demo recordings
 - [references/publishing-kit.md](/E:/manage-current-session-habits/references/publishing-kit.md): outward-facing listing copy and demo script
 - [references/release-checklist.md](/E:/manage-current-session-habits/references/release-checklist.md): release and marketplace-readiness checklist
 - [references/interaction-patterns.md](/E:/manage-current-session-habits/references/interaction-patterns.md): response and follow-up phrasing guidance
@@ -281,6 +282,7 @@ If this skill is prepared for a marketplace or wider sharing, keep these rules:
 
 Before sharing or publishing, run:
 
+- [references/demo-material-requirements.md](/E:/manage-current-session-habits/references/demo-material-requirements.md)
 - [references/release-checklist.md](/E:/manage-current-session-habits/references/release-checklist.md)
 - [references/publishing-kit.md](/E:/manage-current-session-habits/references/publishing-kit.md)
 

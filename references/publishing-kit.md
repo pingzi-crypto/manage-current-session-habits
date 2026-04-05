@@ -9,6 +9,10 @@ It is intentionally short and practical:
 - demo script
 - screenshot checklist
 
+If you are actually producing screenshots or recordings, also use:
+
+- [demo-material-requirements.md](/E:/manage-current-session-habits/references/demo-material-requirements.md)
+
 ## One-Line Positioning
 
 Turn the current Codex conversation into reviewable user-habit candidates without leaving the thread.
