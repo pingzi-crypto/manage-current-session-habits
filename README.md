@@ -8,8 +8,23 @@ If you want habit management to happen inside the normal Codex thread instead of
 
 ## Quick Start
 
+Fastest install from any PowerShell 7 window:
+
+```powershell
+$bootstrap = Join-Path $env:TEMP "manage-current-session-habits-bootstrap.ps1"
+Invoke-WebRequest https://raw.githubusercontent.com/pingzi-crypto/manage-current-session-habits/main/bootstrap-install.ps1 -OutFile $bootstrap
+& $bootstrap
+```
+
+Prerequisites for this path:
+`git`, `pwsh`, and `node` must be available on `PATH`.
+
+This clones or refreshes the skill into a default local checkout, installs it into Codex, and runs the smoke check.
+
+If you prefer to inspect the repository first, use the manual path:
+
 1. Clone this repository.
-2. Make sure `pwsh` and `node` are available on `PATH`.
+2. Make sure `git`, `pwsh`, and `node` are available on `PATH`.
 3. Run:
 
 ```powershell
@@ -30,6 +45,14 @@ If you want to keep using a local backend checkout instead of the published npm 
 
 ```powershell
 & .\install.ps1 -BackendRepoPath /path/to/user-habit-pipeline
+```
+
+If you want bootstrap mode but with an explicit local checkout path:
+
+```powershell
+$bootstrap = Join-Path $env:TEMP "manage-current-session-habits-bootstrap.ps1"
+Invoke-WebRequest https://raw.githubusercontent.com/pingzi-crypto/manage-current-session-habits/main/bootstrap-install.ps1 -OutFile $bootstrap
+& $bootstrap -InstallRoot "$HOME/.codex/repos/manage-current-session-habits"
 ```
 
 If you only want a preview of what would be installed:
@@ -67,6 +90,7 @@ It forwards current-thread context to the backend, and the user still explicitly
 
 ## More Details
 
+- [bootstrap-install.ps1](/E:/manage-current-session-habits/bootstrap-install.ps1)
 - [install.ps1](/E:/manage-current-session-habits/install.ps1)
 - [SKILL.md](/E:/manage-current-session-habits/SKILL.md)
 - [scripts/install-skill.ps1](/E:/manage-current-session-habits/scripts/install-skill.ps1)
