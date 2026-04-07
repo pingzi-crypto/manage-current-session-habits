@@ -10,6 +10,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+$repoName = "manage-current-session-habits"
 
 function Get-HomeDirectory {
   if ($env:HOME) {
@@ -30,7 +31,7 @@ function Get-DefaultInstallRoot {
     Join-Path (Get-HomeDirectory) ".codex"
   }
 
-  return (Join-Path (Join-Path $codexRoot "repos") "manage-current-session-habits")
+  return (Join-Path (Join-Path $codexRoot "repos") $repoName)
 }
 
 function Test-IsGitRepository {
@@ -39,6 +40,23 @@ function Test-IsGitRepository {
   )
 
   return (Test-Path -LiteralPath (Join-Path $Path ".git"))
+}
+
+function Resolve-CheckoutPath {
+  param(
+    [string]$ProvidedPath
+  )
+
+  if (-not $ProvidedPath) {
+    return (Get-DefaultInstallRoot)
+  }
+
+  $resolvedCandidate = [System.IO.Path]::GetFullPath($ProvidedPath)
+  if ((Split-Path -Leaf $resolvedCandidate) -eq $repoName) {
+    return $resolvedCandidate
+  }
+
+  return (Join-Path $resolvedCandidate $repoName)
 }
 
 function Ensure-RepositoryCheckout {
@@ -94,11 +112,7 @@ function Ensure-RepositoryCheckout {
   return "updated"
 }
 
-if (-not $InstallRoot) {
-  $InstallRoot = Get-DefaultInstallRoot
-}
-
-$resolvedInstallRoot = [System.IO.Path]::GetFullPath($InstallRoot)
+$resolvedInstallRoot = Resolve-CheckoutPath -ProvidedPath $InstallRoot
 $checkoutAction = Ensure-RepositoryCheckout -Path $resolvedInstallRoot -RepoUrl $RepositoryUrl
 $installScriptPath = Join-Path $resolvedInstallRoot "install.ps1"
 

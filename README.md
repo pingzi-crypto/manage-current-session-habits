@@ -52,7 +52,7 @@ If you want bootstrap mode but with an explicit local checkout path:
 ```powershell
 $bootstrap = Join-Path $env:TEMP "manage-current-session-habits-bootstrap.ps1"
 Invoke-WebRequest https://raw.githubusercontent.com/pingzi-crypto/manage-current-session-habits/main/bootstrap-install.ps1 -OutFile $bootstrap
-& $bootstrap -InstallRoot "$HOME/.codex/repos/manage-current-session-habits"
+& $bootstrap -InstallRoot "$HOME/.codex/repos"
 ```
 
 If you only want a preview of what would be installed:
