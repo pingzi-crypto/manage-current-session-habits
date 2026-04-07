@@ -1,7 +1,7 @@
 {
   "backend_source": "package",
   "backend_package_name": "user-habit-pipeline",
-  "backend_package_version": "0.4.0",
+  "backend_package_version": "0.4.1",
   "backend_install_root": "D:\\path\\to\\manage-current-session-habits\\config\\npm-backend",
   "bridge_cli_path": "D:\\path\\to\\manage-current-session-habits\\config\\npm-backend\\node_modules\\.bin\\codex-session-habits.cmd"
 }
