@@ -13,8 +13,7 @@ If you want habit management to happen inside the normal Codex thread instead of
 3. Run:
 
 ```powershell
-& .\scripts\install-skill.ps1
-& .\scripts\check-install.ps1 -SmokeTest
+& .\install.ps1
 ```
 
 4. In a normal Codex conversation, say:
@@ -24,12 +23,19 @@ If you want habit management to happen inside the normal Codex thread instead of
 - `忽略第1条`
 - `列出用户习惯短句`
 
+This installs the skill and runs the smoke check in one step.
 If the smoke check passes, the current-session bridge is installed correctly.
 
 If you want to keep using a local backend checkout instead of the published npm package, install with:
 
 ```powershell
-& .\scripts\install-skill.ps1 -BackendRepoPath /path/to/user-habit-pipeline
+& .\install.ps1 -BackendRepoPath /path/to/user-habit-pipeline
+```
+
+If you only want a preview of what would be installed:
+
+```powershell
+& .\install.ps1 -CheckOnly
 ```
 
 Non-Windows note:
@@ -61,6 +67,7 @@ It forwards current-thread context to the backend, and the user still explicitly
 
 ## More Details
 
+- [install.ps1](/E:/manage-current-session-habits/install.ps1)
 - [SKILL.md](/E:/manage-current-session-habits/SKILL.md)
 - [scripts/install-skill.ps1](/E:/manage-current-session-habits/scripts/install-skill.ps1)
 - [scripts/check-install.ps1](/E:/manage-current-session-habits/scripts/check-install.ps1)
