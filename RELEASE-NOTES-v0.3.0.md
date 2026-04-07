@@ -10,12 +10,12 @@ This release upgrades the public install surface from a repo-internal script flo
 
 ## Highlights
 
-- added [install.ps1](/E:/manage-current-session-habits/install.ps1) as the main one-step install entrypoint
-- added [bootstrap-install.ps1](/E:/manage-current-session-habits/bootstrap-install.ps1) for cold-start setup from outside the repo
+- added `install.ps1` as the main one-step install entrypoint
+- added `bootstrap-install.ps1` for cold-start setup from outside the repo
 - added SSH fallback for bootstrap clone when HTTPS GitHub clone fails but SSH is available
-- added [uninstall.ps1](/E:/manage-current-session-habits/uninstall.ps1) to remove the installed skill link and generated local runtime files without deleting the repo checkout
-- added [INSTALL-LIFECYCLE-CHECKLIST.md](/E:/manage-current-session-habits/INSTALL-LIFECYCLE-CHECKLIST.md) as the public acceptance path for install lifecycle validation
-- updated [README.md](/E:/manage-current-session-habits/README.md) to prefer the most reliable clone-based quick start and document uninstall/reinstall paths
+- added `uninstall.ps1` to remove the installed skill link and generated local runtime files without deleting the repo checkout
+- added `INSTALL-LIFECYCLE-CHECKLIST.md` as the public acceptance path for install lifecycle validation
+- updated `README.md` to prefer the most reliable clone-based quick start and document uninstall/reinstall paths
 
 ## Why This Release Exists
 
