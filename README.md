@@ -20,6 +20,7 @@ Prerequisites for this path:
 `git`, `pwsh`, and `node` must be available on `PATH`.
 
 This clones or refreshes the skill into a default local checkout, installs it into Codex, and runs the smoke check.
+It prefers the public HTTPS GitHub clone path and automatically retries with SSH when HTTPS clone is blocked but SSH access is available.
 
 If you prefer to inspect the repository first, use the manual path:
 

@@ -42,6 +42,45 @@ function Test-IsGitRepository {
   return (Test-Path -LiteralPath (Join-Path $Path ".git"))
 }
 
+function Convert-ToSshGitHubUrl {
+  param(
+    [string]$Url
+  )
+
+  if ($Url -match '^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$') {
+    return ("git@github.com:{0}/{1}.git" -f $Matches[1], $Matches[2])
+  }
+
+  return $null
+}
+
+function Normalize-RepositoryUrl {
+  param(
+    [string]$Url
+  )
+
+  if ($Url -match '^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$') {
+    return ("github.com/{0}/{1}" -f $Matches[1], $Matches[2]).ToLowerInvariant()
+  }
+
+  if ($Url -match '^git@github\.com:([^/]+)/([^/]+?)(?:\.git)?$') {
+    return ("github.com/{0}/{1}" -f $Matches[1], $Matches[2]).ToLowerInvariant()
+  }
+
+  return ([System.IO.Path]::GetFullPath($Url)).ToLowerInvariant()
+}
+
+function Invoke-GitClone {
+  param(
+    [string]$GitExecutable,
+    [string]$RepoUrl,
+    [string]$Path
+  )
+
+  & $GitExecutable clone $RepoUrl $Path
+  return $LASTEXITCODE
+}
+
 function Resolve-CheckoutPath {
   param(
     [string]$ProvidedPath
@@ -73,8 +112,17 @@ function Ensure-RepositoryCheckout {
       New-Item -ItemType Directory -Path $parentPath -Force | Out-Null
     }
 
-    & $gitCommand.Source clone $RepoUrl $Path
-    if ($LASTEXITCODE -ne 0) {
+    $cloneExitCode = Invoke-GitClone -GitExecutable $gitCommand.Source -RepoUrl $RepoUrl -Path $Path
+    if ($cloneExitCode -ne 0) {
+      $sshRepoUrl = Convert-ToSshGitHubUrl -Url $RepoUrl
+      if ($sshRepoUrl) {
+        Write-Output "HTTPS clone failed. Retrying with SSH..."
+        $cloneExitCode = Invoke-GitClone -GitExecutable $gitCommand.Source -RepoUrl $sshRepoUrl -Path $Path
+        if ($cloneExitCode -eq 0) {
+          return "cloned via ssh fallback"
+        }
+      }
+
       throw "git clone failed for $RepoUrl"
     }
     return "cloned"
@@ -100,7 +148,7 @@ function Ensure-RepositoryCheckout {
     throw "Unable to read origin remote for $resolvedPath"
   }
 
-  if ($originUrl -ne $RepoUrl) {
+  if ((Normalize-RepositoryUrl -Url $originUrl) -ne (Normalize-RepositoryUrl -Url $RepoUrl)) {
     throw "Install root points to a different origin: $originUrl"
   }
 
