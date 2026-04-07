@@ -8,19 +8,34 @@ If you want habit management to happen inside the normal Codex thread instead of
 
 ## Quick Start
 
-Fastest install from any PowerShell 7 window:
+Most reliable install from any PowerShell 7 window:
 
 ```powershell
-$bootstrap = Join-Path $env:TEMP "manage-current-session-habits-bootstrap.ps1"
-Invoke-WebRequest https://raw.githubusercontent.com/pingzi-crypto/manage-current-session-habits/main/bootstrap-install.ps1 -OutFile $bootstrap
-& $bootstrap
+$repo = Join-Path $HOME ".codex/repos/manage-current-session-habits"
+if (Test-Path -LiteralPath $repo) {
+  git -C $repo pull --ff-only origin main
+} else {
+  git clone https://github.com/pingzi-crypto/manage-current-session-habits.git $repo
+  if ($LASTEXITCODE -ne 0) {
+    git clone git@github.com:pingzi-crypto/manage-current-session-habits.git $repo
+  }
+}
+& (Join-Path $repo "install.ps1")
 ```
 
 Prerequisites for this path:
 `git`, `pwsh`, and `node` must be available on `PATH`.
 
 This clones or refreshes the skill into a default local checkout, installs it into Codex, and runs the smoke check.
-It prefers the public HTTPS GitHub clone path and automatically retries with SSH when HTTPS clone is blocked but SSH access is available.
+It prefers the public HTTPS GitHub clone path and falls back to SSH when HTTPS clone is blocked but SSH access is available.
+
+Optional convenience bootstrap if your environment can fetch from `raw.githubusercontent.com`:
+
+```powershell
+$bootstrap = Join-Path $env:TEMP "manage-current-session-habits-bootstrap.ps1"
+Invoke-WebRequest https://raw.githubusercontent.com/pingzi-crypto/manage-current-session-habits/main/bootstrap-install.ps1 -OutFile $bootstrap
+& $bootstrap
+```
 
 If you prefer to inspect the repository first, use the manual path:
 
