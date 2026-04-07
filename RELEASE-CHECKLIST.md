@@ -1,0 +1,109 @@
+# Skill Release Checklist
+
+Use this checklist before treating `manage-current-session-habits` as ready for a new outward-facing release.
+
+This is the skill-side release gate.
+It complements the backend repository checks in `user-habit-pipeline`; it does not replace them.
+
+---
+
+## 1. Backend Baseline
+
+Confirm the backend contract you intend to ship against is already known-good.
+
+Current expected baseline:
+
+- backend repo: `user-habit-pipeline`
+- backend release baseline: `v0.4.2`
+
+Run from the backend repo:
+
+```powershell
+npm run release-check
+```
+
+Confirm:
+
+- backend `release-check` passes
+- the current-session bridge contract still matches the skill behavior you expect to ship
+- `assistant_reply_markdown`, `suggested_follow_ups`, and `next_step_assessment` are still part of successful bridge replies
+
+---
+
+## 2. Skill Install Validation
+
+Run from this repository:
+
+```powershell
+& .\install.ps1 -CheckOnly
+& .\scripts\check-install.ps1 -SmokeTest
+```
+
+Confirm:
+
+- install preview resolves the expected skill target and backend source
+- smoke output shows:
+  - `skill_link`
+  - `local_config`
+  - `smoke_test_scan`
+  - `smoke_test_apply`
+- the wrapper still supports cached follow-up apply after scan
+
+If local backend checkout compatibility is part of the release promise, also run:
+
+```powershell
+& .\install.ps1 -BackendRepoPath <path-to-user-habit-pipeline>
+```
+
+Confirm:
+
+- repo override install succeeds
+- smoke still passes in repo mode
+
+---
+
+## 3. Install Lifecycle Validation
+
+Use the public lifecycle path in:
+
+- [INSTALL-LIFECYCLE-CHECKLIST.md](/E:/manage-current-session-habits/INSTALL-LIFECYCLE-CHECKLIST.md)
+
+Minimum release-time expectation:
+
+- first install works
+- rerun / refresh works
+- uninstall works
+- reinstall works
+
+If one of these fails, fix the install surface before doing release copy polish.
+
+---
+
+## 4. Contract Alignment
+
+Check that these still agree:
+
+- [README.md](/E:/manage-current-session-habits/README.md)
+- [SKILL.md](/E:/manage-current-session-habits/SKILL.md)
+- [RELEASE-NOTES-v0.3.0.md](/E:/manage-current-session-habits/RELEASE-NOTES-v0.3.0.md)
+- backend [codex-current-session-contract.md](https://github.com/pingzi-crypto/user-habit-pipeline/blob/main/docs/codex-current-session-contract.md)
+
+Pay special attention to:
+
+- current-thread transcript sourcing rules
+- cached follow-up apply behavior
+- low-ROI stop wording
+- package mode vs repo override install behavior
+
+---
+
+## 5. Public Release Surface
+
+Before publishing, confirm:
+
+- `README.md` is the install surface you want users to see
+- `RELEASE-NOTES-v0.3.0.md` still matches the release body you want to publish
+- `assets/readme-short-demo.gif` is still the demo asset you want associated with the release page
+
+If these are stale, update them in the same change set instead of releasing with known mismatch.
+

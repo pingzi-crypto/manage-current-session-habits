@@ -134,6 +134,8 @@ It forwards current-thread context to the backend, and the user still explicitly
 ## More Details
 
 - [INSTALL-LIFECYCLE-CHECKLIST.md](/E:/manage-current-session-habits/INSTALL-LIFECYCLE-CHECKLIST.md)
+- [RELEASE-CHECKLIST.md](/E:/manage-current-session-habits/RELEASE-CHECKLIST.md)
+- [RELEASE-RUNBOOK.md](/E:/manage-current-session-habits/RELEASE-RUNBOOK.md)
 - [bootstrap-install.ps1](/E:/manage-current-session-habits/bootstrap-install.ps1)
 - [install.ps1](/E:/manage-current-session-habits/install.ps1)
 - [uninstall.ps1](/E:/manage-current-session-habits/uninstall.ps1)
