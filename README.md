@@ -8,12 +8,12 @@ If you want habit management to happen inside the normal Codex thread instead of
 
 ## Quick Start
 
-1. Clone this repository and `user-habit-pipeline`.
+1. Clone this repository.
 2. Make sure `pwsh` and `node` are available on `PATH`.
 3. Run:
 
 ```powershell
-& .\scripts\install-skill.ps1 -BackendRepoPath /path/to/user-habit-pipeline
+& .\scripts\install-skill.ps1
 & .\scripts\check-install.ps1 -SmokeTest
 ```
 
@@ -25,6 +25,12 @@ If you want habit management to happen inside the normal Codex thread instead of
 - `列出用户习惯短句`
 
 If the smoke check passes, the current-session bridge is installed correctly.
+
+If you want to keep using a local backend checkout instead of the published npm package, install with:
+
+```powershell
+& .\scripts\install-skill.ps1 -BackendRepoPath /path/to/user-habit-pipeline
+```
 
 Non-Windows note:
 the install and check scripts now support PowerShell 7 on macOS and Linux, but the repository is currently only smoke-verified on Windows.

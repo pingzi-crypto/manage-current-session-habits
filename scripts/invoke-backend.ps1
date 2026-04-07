@@ -23,7 +23,7 @@ if ($threadSources.Count -gt 1) {
 
 $resolvedConfigPath = [System.IO.Path]::GetFullPath($ConfigPath)
 if (!(Test-Path -LiteralPath $resolvedConfigPath)) {
-  throw "Missing local config at $resolvedConfigPath. Run scripts/install-skill.ps1 -BackendRepoPath <path> first."
+  throw "Missing local config at $resolvedConfigPath. Run scripts/install-skill.ps1 first."
 }
 
 $config = Get-Content -Raw -LiteralPath $resolvedConfigPath | ConvertFrom-Json
@@ -41,7 +41,6 @@ if (!(Test-Path -LiteralPath $resolvedBridgeCliPath)) {
 $null = Get-Command node -ErrorAction Stop
 
 $commandArgs = @(
-  $resolvedBridgeCliPath,
   "--request",
   $Request
 )
@@ -71,7 +70,11 @@ if ($Transcript) {
     throw "-Transcript requires non-empty text."
   }
 
-  $Transcript | & node @commandArgs
+  if ([System.IO.Path]::GetExtension($resolvedBridgeCliPath) -ieq ".js") {
+    $Transcript | & node $resolvedBridgeCliPath @commandArgs
+  } else {
+    $Transcript | & $resolvedBridgeCliPath @commandArgs
+  }
   exit $LASTEXITCODE
 }
 
@@ -82,9 +85,17 @@ if ($ThreadStdin) {
     throw "-ThreadStdin requires non-empty stdin input."
   }
 
-  $stdinText | & node @commandArgs
+  if ([System.IO.Path]::GetExtension($resolvedBridgeCliPath) -ieq ".js") {
+    $stdinText | & node $resolvedBridgeCliPath @commandArgs
+  } else {
+    $stdinText | & $resolvedBridgeCliPath @commandArgs
+  }
   exit $LASTEXITCODE
 }
 
-& node @commandArgs
+if ([System.IO.Path]::GetExtension($resolvedBridgeCliPath) -ieq ".js") {
+  & node $resolvedBridgeCliPath @commandArgs
+} else {
+  & $resolvedBridgeCliPath @commandArgs
+}
 exit $LASTEXITCODE

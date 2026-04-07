@@ -118,15 +118,41 @@ if (!(Test-Path -LiteralPath $resolvedConfigPath)) {
 $config = Get-Content -Raw -LiteralPath $resolvedConfigPath | ConvertFrom-Json
 Add-Check -Name "local_config" -Status "ok" -Detail $resolvedConfigPath
 
-if ([string]::IsNullOrWhiteSpace($config.backend_repo_path)) {
-  throw "local-config.json is missing backend_repo_path"
-}
+$backendSource = if ([string]::IsNullOrWhiteSpace([string]$config.backend_source)) { "repo" } else { [string]$config.backend_source }
 
-$resolvedBackendRepoPath = [System.IO.Path]::GetFullPath([string]$config.backend_repo_path)
-if (!(Test-Path -LiteralPath $resolvedBackendRepoPath)) {
-  throw "Configured backend repo was not found at $resolvedBackendRepoPath"
+if ($backendSource -eq "repo") {
+  if ([string]::IsNullOrWhiteSpace($config.backend_repo_path)) {
+    throw "local-config.json is missing backend_repo_path"
+  }
+
+  $resolvedBackendRepoPath = [System.IO.Path]::GetFullPath([string]$config.backend_repo_path)
+  if (!(Test-Path -LiteralPath $resolvedBackendRepoPath)) {
+    throw "Configured backend repo was not found at $resolvedBackendRepoPath"
+  }
+  Add-Check -Name "backend_repo" -Status "ok" -Detail $resolvedBackendRepoPath
+} elseif ($backendSource -eq "package") {
+  if ([string]::IsNullOrWhiteSpace([string]$config.backend_install_root)) {
+    throw "local-config.json is missing backend_install_root"
+  }
+
+  $resolvedBackendInstallRoot = [System.IO.Path]::GetFullPath([string]$config.backend_install_root)
+  if (!(Test-Path -LiteralPath $resolvedBackendInstallRoot)) {
+    throw "Configured backend install root was not found at $resolvedBackendInstallRoot"
+  }
+
+  if ([string]::IsNullOrWhiteSpace([string]$config.backend_package_name)) {
+    throw "local-config.json is missing backend_package_name"
+  }
+
+  $resolvedInstalledPackagePath = Join-Path (Join-Path $resolvedBackendInstallRoot "node_modules") ([string]$config.backend_package_name)
+  if (!(Test-Path -LiteralPath $resolvedInstalledPackagePath)) {
+    throw "Configured backend package was not found at $resolvedInstalledPackagePath"
+  }
+
+  Add-Check -Name "backend_package" -Status "ok" -Detail $resolvedInstalledPackagePath
+} else {
+  throw "Unsupported backend_source `"$backendSource`"."
 }
-Add-Check -Name "backend_repo" -Status "ok" -Detail $resolvedBackendRepoPath
 
 if ([string]::IsNullOrWhiteSpace($config.bridge_cli_path)) {
   throw "local-config.json is missing bridge_cli_path"

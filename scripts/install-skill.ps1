@@ -2,6 +2,7 @@ param(
   [string]$SkillRepoPath,
   [string]$CodexSkillsRoot,
   [string]$BackendRepoPath,
+  [string]$BackendPackageSpec = "user-habit-pipeline",
   [switch]$CheckOnly,
   [switch]$ForceRelink
 )
@@ -40,12 +41,49 @@ function Resolve-BackendRepoPath {
     return (Resolve-Path -LiteralPath $env:USER_HABIT_PIPELINE_REPO).Path
   }
 
-  $siblingCandidate = Join-Path (Split-Path -Path $SkillRepoPath -Parent) "user-habit-pipeline"
-  if (Test-Path -LiteralPath $siblingCandidate) {
-    return (Resolve-Path -LiteralPath $siblingCandidate).Path
+  return $null
+}
+
+function Write-Utf8NoBomFile {
+  param(
+    [string]$Path,
+    [string]$Content
+  )
+
+  $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+  [System.IO.File]::WriteAllText($Path, $Content + [Environment]::NewLine, $utf8NoBom)
+}
+
+function Install-BackendPackage {
+  param(
+    [string]$InstallRoot,
+    [string]$PackageSpec
+  )
+
+  $npmCommand = Get-Command npm -ErrorAction Stop
+  if (!(Test-Path -LiteralPath $InstallRoot)) {
+    New-Item -ItemType Directory -Path $InstallRoot -Force | Out-Null
   }
 
-  throw "Backend repo path is required. Pass -BackendRepoPath or set USER_HABIT_PIPELINE_REPO."
+  $packageJsonPath = Join-Path $InstallRoot "package.json"
+  if (!(Test-Path -LiteralPath $packageJsonPath)) {
+    Write-Utf8NoBomFile -Path $packageJsonPath -Content (@{
+      name = "manage-current-session-habits-backend-runtime"
+      private = $true
+    } | ConvertTo-Json)
+  }
+
+  & $npmCommand.Source install --prefix $InstallRoot $PackageSpec
+  if ($LASTEXITCODE -ne 0) {
+    throw "npm install failed for backend package spec `"$PackageSpec`"."
+  }
+
+  $installedPackageJsonPath = Join-Path (Join-Path (Join-Path $InstallRoot "node_modules") "user-habit-pipeline") "package.json"
+  if (!(Test-Path -LiteralPath $installedPackageJsonPath)) {
+    throw "Installed backend package metadata was not found at $installedPackageJsonPath"
+  }
+
+  return (Get-Content -Raw -LiteralPath $installedPackageJsonPath | ConvertFrom-Json)
 }
 
 function Get-LinkTargetDetail {
@@ -150,16 +188,41 @@ $skillName = Split-Path -Path $resolvedRepoPath -Leaf
 $targetPath = Join-Path $CodexSkillsRoot $skillName
 $configDir = Join-Path $resolvedRepoPath "config"
 $configPath = Join-Path $configDir "local-config.json"
-$bridgeCliPath = Join-Path (Join-Path $resolvedBackendRepoPath "src") "codex-session-habits-cli.js"
+$backendInstallRoot = Join-Path $configDir "npm-backend"
 
-if (!(Test-Path -LiteralPath $bridgeCliPath)) {
-  throw "Bridge CLI was not found at $bridgeCliPath"
+if ($resolvedBackendRepoPath) {
+  $backendSource = "repo"
+  $bridgeCliPath = Join-Path (Join-Path $resolvedBackendRepoPath "src") "codex-session-habits-cli.js"
+
+  if (!(Test-Path -LiteralPath $bridgeCliPath)) {
+    throw "Bridge CLI was not found at $bridgeCliPath"
+  }
+
+  $configObject = @{
+    backend_source = $backendSource
+    backend_repo_path = $resolvedBackendRepoPath
+    bridge_cli_path = $bridgeCliPath
+  }
+} else {
+  $backendSource = "package"
+  $installedPackage = Install-BackendPackage -InstallRoot $backendInstallRoot -PackageSpec $BackendPackageSpec
+  $bridgeBinName = if ($IsWindows) { "codex-session-habits.cmd" } else { "codex-session-habits" }
+  $bridgeCliPath = Join-Path (Join-Path (Join-Path $backendInstallRoot "node_modules") ".bin") $bridgeBinName
+
+  if (!(Test-Path -LiteralPath $bridgeCliPath)) {
+    throw "Installed backend bridge CLI was not found at $bridgeCliPath"
+  }
+
+  $configObject = @{
+    backend_source = $backendSource
+    backend_package_name = "user-habit-pipeline"
+    backend_package_version = [string]$installedPackage.version
+    backend_install_root = $backendInstallRoot
+    bridge_cli_path = $bridgeCliPath
+  }
 }
 
-$config = @{
-  backend_repo_path = $resolvedBackendRepoPath
-  bridge_cli_path = $bridgeCliPath
-} | ConvertTo-Json
+$config = $configObject | ConvertTo-Json
 
 $existing = $null
 if (Test-Path -LiteralPath $targetPath) {
@@ -173,7 +236,14 @@ if ($CheckOnly) {
   Write-Output "Codex skills root: $CodexSkillsRoot"
   Write-Output "Install target: $targetPath"
   Write-Output "Config path: $configPath"
-  Write-Output "Backend repo: $resolvedBackendRepoPath"
+  if ($backendSource -eq "repo") {
+    Write-Output "Backend source: repo"
+    Write-Output "Backend repo: $resolvedBackendRepoPath"
+  } else {
+    Write-Output "Backend source: npm package"
+    Write-Output "Backend package spec: $BackendPackageSpec"
+    Write-Output "Backend install root: $backendInstallRoot"
+  }
   Write-Output "Bridge CLI: $bridgeCliPath"
 
   if ($existing) {
@@ -191,11 +261,10 @@ if ($CheckOnly) {
   exit 0
 }
 
-$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 if (!(Test-Path -LiteralPath $configDir)) {
   New-Item -ItemType Directory -Path $configDir -Force | Out-Null
 }
-[System.IO.File]::WriteAllText($configPath, $config + [Environment]::NewLine, $utf8NoBom)
+Write-Utf8NoBomFile -Path $configPath -Content $config
 
 if (!(Test-Path -LiteralPath $CodexSkillsRoot)) {
   New-Item -ItemType Directory -Path $CodexSkillsRoot -Force | Out-Null
@@ -208,7 +277,11 @@ if ($existing) {
       $linkType = New-SkillLink -Path $targetPath -Target $resolvedRepoPath
       Write-Output "Recreated skill link ($linkType): $targetPath -> $resolvedRepoPath"
       Write-Output "Wrote local config: $configPath"
-      Write-Output "Using backend repo: $resolvedBackendRepoPath"
+      if ($backendSource -eq "repo") {
+        Write-Output "Using backend repo: $resolvedBackendRepoPath"
+      } else {
+        Write-Output "Using backend package: $($configObject.backend_package_name)@$($configObject.backend_package_version)"
+      }
       exit 0
     }
 
@@ -223,4 +296,8 @@ if ($existing) {
 $linkType = New-SkillLink -Path $targetPath -Target $resolvedRepoPath
 Write-Output "Installed skill link ($linkType): $targetPath -> $resolvedRepoPath"
 Write-Output "Wrote local config: $configPath"
-Write-Output "Using backend repo: $resolvedBackendRepoPath"
+if ($backendSource -eq "repo") {
+  Write-Output "Using backend repo: $resolvedBackendRepoPath"
+} else {
+  Write-Output "Using backend package: $($configObject.backend_package_name)@$($configObject.backend_package_version)"
+}

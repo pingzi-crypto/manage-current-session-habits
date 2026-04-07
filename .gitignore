@@ -1,6 +1,7 @@
 .DS_Store
 Thumbs.db
 config/local-config.json
+config/npm-backend/
 .codex/
 handoff/
 docs/handoff/

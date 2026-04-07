@@ -7,7 +7,7 @@ description: Scan the current Codex conversation for user habit phrase candidate
 
 Use this skill to keep the user inside the current Codex conversation while driving the configured `user-habit-pipeline` backend.
 
-If the configured backend checkout includes `docs/codex-current-session-contract.md`, treat that backend document as the upstream source of truth for the current-session bridge contract and keep this skill aligned to it.
+If the configured backend is a local checkout and it includes `docs/codex-current-session-contract.md`, treat that backend document as the upstream source of truth for the current-session bridge contract and keep this skill aligned to it.
 
 ## Workflow
 
@@ -15,7 +15,8 @@ If the configured backend checkout includes `docs/codex-current-session-contract
 2. Do not ask the user to locate Codex session files on disk.
 3. For suggestion scans, build a concise role-prefixed transcript from the visible thread context and pass it to the wrapper script in this repository.
 4. For follow-up confirmations such as `添加第1条`, reuse the latest local suggestion cache and do not ask for the transcript again unless the cache is missing.
-5. If the wrapper script reports missing local config, tell the user to refresh the install with `scripts/install-skill.ps1 -BackendRepoPath <path>`.
+5. If the wrapper script reports missing local config, tell the user to refresh the install with `scripts/install-skill.ps1`.
+   If they explicitly want to use a local backend checkout instead of the published npm package, use `scripts/install-skill.ps1 -BackendRepoPath <path>`.
 6. Never ask the user to inspect or guess Codex private thread-storage paths.
 
 ## Response Priority
