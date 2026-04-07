@@ -77,6 +77,32 @@ If you only want a preview of what would be installed:
 & .\install.ps1 -CheckOnly
 ```
 
+To remove the installed skill link and generated local runtime files:
+
+```powershell
+& .\uninstall.ps1
+```
+
+This removes:
+
+- the Codex skill link pointing at this repository
+- `config/local-config.json`
+- `config/npm-backend/`
+
+It does not delete the repository checkout itself.
+
+If you want to preview the uninstall first:
+
+```powershell
+& .\uninstall.ps1 -CheckOnly
+```
+
+If you want to keep the generated backend runtime but remove the installed skill link:
+
+```powershell
+& .\uninstall.ps1 -KeepGeneratedBackend
+```
+
 Non-Windows note:
 the install and check scripts now support PowerShell 7 on macOS and Linux, but the repository is currently only smoke-verified on Windows.
 
@@ -108,6 +134,7 @@ It forwards current-thread context to the backend, and the user still explicitly
 
 - [bootstrap-install.ps1](/E:/manage-current-session-habits/bootstrap-install.ps1)
 - [install.ps1](/E:/manage-current-session-habits/install.ps1)
+- [uninstall.ps1](/E:/manage-current-session-habits/uninstall.ps1)
 - [SKILL.md](/E:/manage-current-session-habits/SKILL.md)
 - [scripts/install-skill.ps1](/E:/manage-current-session-habits/scripts/install-skill.ps1)
 - [scripts/check-install.ps1](/E:/manage-current-session-habits/scripts/check-install.ps1)
