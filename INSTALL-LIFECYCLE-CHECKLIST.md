@@ -44,7 +44,7 @@ if (Test-Path -LiteralPath $repo) {
 Pass criteria:
 
 - install completes without manual file edits
-- smoke output shows `skill_link`, `local_config`, and `smoke_test_scan` as `[OK]`
+- smoke output shows `skill_link`, `local_config`, `smoke_test_scan`, and `smoke_test_apply` as `[OK]`
 - the installed skill entry exists under the Codex skills root
 
 ---

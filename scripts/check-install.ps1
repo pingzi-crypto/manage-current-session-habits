@@ -207,8 +207,31 @@ user: 收尾一下
       throw "Smoke test scan step did not return next_step_assessment."
     }
 
+    $applyOutput = & $invokeScriptPath -Request "添加第1条" -UserRegistryPath $tempRegistry
+    $applyParsed = $applyOutput | ConvertFrom-Json
+    if ($applyParsed.action -ne "apply-candidate") {
+      throw "Smoke test apply step returned unexpected action: $($applyParsed.action)"
+    }
+
+    if ($applyParsed.applied_rule.phrase -ne "收尾一下") {
+      throw "Smoke test apply step returned unexpected phrase: $($applyParsed.applied_rule.phrase)"
+    }
+
+    if ($applyParsed.applied_rule.normalized_intent -ne "close_session") {
+      throw "Smoke test apply step returned unexpected intent: $($applyParsed.applied_rule.normalized_intent)"
+    }
+
+    if (-not $applyParsed.assistant_reply_markdown) {
+      throw "Smoke test apply step did not return assistant_reply_markdown."
+    }
+
+    if (-not $applyParsed.next_step_assessment) {
+      throw "Smoke test apply step did not return next_step_assessment."
+    }
+
     Add-Check -Name "smoke_test_list" -Status "ok" -Detail "Wrapper list invocation succeeded."
     Add-Check -Name "smoke_test_scan" -Status "ok" -Detail "Wrapper scan invocation succeeded with chat-ready bridge fields."
+    Add-Check -Name "smoke_test_apply" -Status "ok" -Detail "Wrapper apply invocation succeeded by reusing the cached suggestion."
   } finally {
     if (Test-Path -LiteralPath $tempDir) {
       Remove-Item -LiteralPath $tempDir -Recurse -Force

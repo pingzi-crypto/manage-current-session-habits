@@ -56,6 +56,7 @@ If you prefer to inspect the repository first, use the manual path:
 
 This installs the skill and runs the smoke check in one step.
 If the smoke check passes, the current-session bridge is installed correctly.
+That smoke check now verifies list, scan, and cached follow-up apply through the installed wrapper.
 
 If you want to keep using a local backend checkout instead of the published npm package, install with:
 
