@@ -10,7 +10,7 @@ For deeper coordination with the backend repo, keep using the cross-repo release
 ## Target Baseline
 
 - skill repo: `manage-current-session-habits v0.3.0`
-- backend contract baseline: `user-habit-pipeline v0.4.2`
+- backend contract baseline: `user-habit-pipeline v0.4.3`
 
 ---
 
@@ -114,5 +114,4 @@ After the release is live, confirm:
 
 - the release page points at the intended release body
 - the README quick start still matches the install path you actually validated
-- the skill still behaves consistently with backend `v0.4.2` bridge output
-
+- the skill still behaves consistently with backend `v0.4.3` bridge output

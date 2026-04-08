@@ -14,7 +14,7 @@ Confirm the backend contract you intend to ship against is already known-good.
 Current expected baseline:
 
 - backend repo: `user-habit-pipeline`
-- backend release baseline: `v0.4.2`
+- backend release baseline: `v0.4.3`
 
 Run from the backend repo:
 
@@ -106,4 +106,3 @@ Before publishing, confirm:
 - `assets/readme-short-demo.gif` is still the demo asset you want associated with the release page
 
 If these are stale, update them in the same change set instead of releasing with known mismatch.
-

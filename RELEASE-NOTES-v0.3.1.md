@@ -3,11 +3,11 @@
 This release tightens the skill's release readiness and install-time validation against the current backend contract.
 
 It does not change the basic in-thread interaction model.
-It makes the published skill safer to ship alongside `user-habit-pipeline v0.4.2`.
+It makes the published skill safer to ship alongside `user-habit-pipeline v0.4.3`.
 
 ## Highlights
 
-- aligned the example local config to backend `user-habit-pipeline v0.4.2`
+- aligned the example local config to backend `user-habit-pipeline v0.4.3`
 - expanded install smoke validation to cover cached follow-up apply, not only list and scan
 - added a skill-side release checklist
 - added a skill-side release runbook
@@ -34,6 +34,6 @@ This release was validated with:
 
 Current intended backend baseline for this skill release:
 
-- `user-habit-pipeline v0.4.2`
+- `user-habit-pipeline v0.4.3`
 
 If the backend contract moves again, update the skill release checklist, runbook, and release notes in the same change set.
