@@ -1,6 +1,6 @@
 ---
 name: manage-current-session-habits
-description: Scan the current Codex conversation for user habit phrase candidates and confirm add/remove/list/ignore actions for the user-habit-pipeline backend. Use when the user says things like `扫描这次会话里的习惯候选`, `根据这次会话建议我新增哪些用户习惯短句`, `添加第1条`, `把第1条加到 session_close 场景`, `忽略第1条`, `删除用户习惯短句`, or asks to inspect current user habit phrases from inside the current Codex app thread.
+description: Codex skill for scanning the current conversation for user habit phrase candidates and confirming add/remove/list/ignore actions through the user-habit-pipeline backend. Use when the user asks to scan the current session for repeated shorthand, manage current-thread habit candidates, inspect saved user habit phrases, or trigger prompts such as `扫描这次会话里的习惯候选`, `根据这次会话建议我新增哪些用户习惯短句`, `添加第1条`, `把第1条加到 session_close 场景`, `忽略第1条`, or `删除用户习惯短句`.
 ---
 
 # Manage Current Session Habits

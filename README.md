@@ -2,7 +2,11 @@
 
 Codex skill for scanning the current conversation for user habit phrase candidates and confirming them in place through `user-habit-pipeline`.
 
-If you want habit management to happen inside the normal Codex thread instead of through transcript-file hunting or manual backend commands, this is the thin integration layer for that flow.
+If you want AI habit management to happen inside the normal Codex thread instead of through transcript-file hunting or manual backend commands, this is the thin integration layer for that flow.
+
+This project is best understood as a Codex app skill for user habit memory, current-session phrase scanning, and in-thread confirmation of repeated user shorthand.
+
+If you are searching for a Codex skill, AI chat habit scanner, current conversation phrase extractor, or an in-thread user preference manager, this repository is the intended entrypoint.
 
 ![README short demo](assets/readme-short-demo.gif)
 
@@ -113,6 +117,14 @@ the install and check scripts now support PowerShell 7 on macOS and Linux, but t
 - lets the user confirm or ignore candidates with short follow-up prompts
 - lists or removes already saved user habit phrases
 - keeps the interaction inside the conversation UI
+
+## Search-Friendly Use Cases
+
+- Codex app skill for scanning the current conversation for repeated user phrases
+- AI assistant habit manager that stays inside the chat UI
+- in-thread user preference capture without transcript-file hunting
+- lightweight bridge from Codex conversations into `user-habit-pipeline`
+- explicit add / ignore / list / remove flow for user shorthand phrases
 
 Typical flow:
 
