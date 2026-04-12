@@ -16,7 +16,7 @@ This repository is the thin Codex app bridge for user habit memory, current-sess
 
 ## Quick Start
 
-Most reliable install from any PowerShell 7 window:
+Windows:
 
 ```powershell
 $repo = Join-Path $HOME ".codex/repos/manage-current-session-habits"
@@ -31,13 +31,29 @@ if (Test-Path -LiteralPath $repo) {
 & (Join-Path $repo "install.ps1")
 ```
 
-Prerequisites for this path:
-`git`, `pwsh`, and `node` must be available on `PATH`.
+macOS / Linux:
+
+```bash
+repo="$HOME/.codex/repos/manage-current-session-habits"
+if [ -d "$repo/.git" ]; then
+  git -C "$repo" pull --ff-only origin main
+else
+  git clone https://github.com/pingzi-crypto/manage-current-session-habits.git "$repo" ||
+    git clone git@github.com:pingzi-crypto/manage-current-session-habits.git "$repo"
+fi
+bash "$repo/install.sh"
+```
+
+Prerequisites for these paths:
+- Windows: `git`, `pwsh`, and `node`
+- macOS / Linux: `git`, `bash`, and `node`
 
 This clones or refreshes the skill into a default local checkout, installs it into Codex, and runs the smoke check.
 It prefers the public HTTPS GitHub clone path and falls back to SSH when HTTPS clone is blocked but SSH access is available.
 
 Optional convenience bootstrap if your environment can fetch from `raw.githubusercontent.com`:
+
+Windows:
 
 ```powershell
 $bootstrap = Join-Path $env:TEMP "manage-current-session-habits-bootstrap.ps1"
@@ -45,14 +61,28 @@ Invoke-WebRequest https://raw.githubusercontent.com/pingzi-crypto/manage-current
 & $bootstrap
 ```
 
+macOS / Linux:
+
+```bash
+bootstrap="${TMPDIR:-/tmp}/manage-current-session-habits-bootstrap-install.sh"
+curl -fsSL https://raw.githubusercontent.com/pingzi-crypto/manage-current-session-habits/main/bootstrap-install.sh -o "$bootstrap"
+bash "$bootstrap"
+```
+
 If you prefer to inspect the repository first, use the manual path:
 
 1. Clone this repository.
-2. Make sure `git`, `pwsh`, and `node` are available on `PATH`.
+2. Make sure your platform prerequisites are available on `PATH`.
 3. Run:
 
 ```powershell
+# Windows
 ./install.ps1
+```
+
+```bash
+# macOS / Linux
+bash ./install.sh
 ```
 
 4. In a normal Codex conversation, say:
@@ -81,27 +111,53 @@ If you want to see that backend path already running in a clean outside project,
 If you want to keep using a local backend checkout instead of the published npm package, install with:
 
 ```powershell
+# Windows
 ./install.ps1 -BackendRepoPath /path/to/user-habit-pipeline
+```
+
+```bash
+# macOS / Linux
+bash ./install.sh --backend-repo-path /path/to/user-habit-pipeline
 ```
 
 If you want bootstrap mode but with an explicit local checkout path:
 
 ```powershell
+# Windows
 $bootstrap = Join-Path $env:TEMP "manage-current-session-habits-bootstrap.ps1"
 Invoke-WebRequest https://raw.githubusercontent.com/pingzi-crypto/manage-current-session-habits/main/bootstrap-install.ps1 -OutFile $bootstrap
 & $bootstrap -InstallRoot "$HOME/.codex/repos"
 ```
 
+```bash
+# macOS / Linux
+bootstrap="${TMPDIR:-/tmp}/manage-current-session-habits-bootstrap-install.sh"
+curl -fsSL https://raw.githubusercontent.com/pingzi-crypto/manage-current-session-habits/main/bootstrap-install.sh -o "$bootstrap"
+bash "$bootstrap" --install-root "$HOME/.codex/repos"
+```
+
 If you only want a preview of what would be installed:
 
 ```powershell
+# Windows
 ./install.ps1 -CheckOnly
+```
+
+```bash
+# macOS / Linux
+bash ./install.sh --check-only
 ```
 
 To remove the installed skill link and generated local runtime files:
 
 ```powershell
+# Windows
 ./uninstall.ps1
+```
+
+```bash
+# macOS / Linux
+bash ./uninstall.sh
 ```
 
 This removes:
@@ -115,17 +171,29 @@ It does not delete the repository checkout itself.
 If you want to preview the uninstall first:
 
 ```powershell
+# Windows
 ./uninstall.ps1 -CheckOnly
+```
+
+```bash
+# macOS / Linux
+bash ./uninstall.sh --check-only
 ```
 
 If you want to keep the generated backend runtime but remove the installed skill link:
 
 ```powershell
+# Windows
 ./uninstall.ps1 -KeepGeneratedBackend
 ```
 
+```bash
+# macOS / Linux
+bash ./uninstall.sh --keep-generated-backend
+```
+
 Cross-platform note:
-the install and check scripts are designed for PowerShell 7 on Windows, macOS, and Linux, and the repository now includes a cross-platform smoke matrix for those three runner families.
+Windows still ships PowerShell entrypoints, but macOS / Linux now have native `sh` install, uninstall, bootstrap, and smoke wrappers backed by the same Node implementation. The repository smoke matrix validates Windows, macOS, and Linux against those public entrypaths.
 
 ## What It Does
 
@@ -167,9 +235,14 @@ It forwards current-thread context to the backend, and the user still explicitly
 - [INSTALL-LIFECYCLE-CHECKLIST.md](/E:/manage-current-session-habits/INSTALL-LIFECYCLE-CHECKLIST.md)
 - [RELEASE-CHECKLIST.md](/E:/manage-current-session-habits/RELEASE-CHECKLIST.md)
 - [RELEASE-RUNBOOK.md](/E:/manage-current-session-habits/RELEASE-RUNBOOK.md)
+- [bootstrap-install.sh](/E:/manage-current-session-habits/bootstrap-install.sh)
 - [bootstrap-install.ps1](/E:/manage-current-session-habits/bootstrap-install.ps1)
+- [install.sh](/E:/manage-current-session-habits/install.sh)
 - [install.ps1](/E:/manage-current-session-habits/install.ps1)
+- [uninstall.sh](/E:/manage-current-session-habits/uninstall.sh)
 - [uninstall.ps1](/E:/manage-current-session-habits/uninstall.ps1)
 - [SKILL.md](/E:/manage-current-session-habits/SKILL.md)
+- [scripts/check-install.sh](/E:/manage-current-session-habits/scripts/check-install.sh)
 - [scripts/install-skill.ps1](/E:/manage-current-session-habits/scripts/install-skill.ps1)
 - [scripts/check-install.ps1](/E:/manage-current-session-habits/scripts/check-install.ps1)
+- [scripts/invoke-backend.sh](/E:/manage-current-session-habits/scripts/invoke-backend.sh)

@@ -10,189 +10,31 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$repoName = "manage-current-session-habits"
+$nodeCommand = Get-Command node -ErrorAction Stop
+$scriptPath = Join-Path (Split-Path -Parent $MyInvocation.MyCommand.Path) "scripts/bootstrap-install.js"
 
-function Get-HomeDirectory {
-  if ($env:HOME) {
-    return $env:HOME
-  }
-
-  if ($env:USERPROFILE) {
-    return $env:USERPROFILE
-  }
-
-  throw "Unable to determine the user home directory. Set HOME or USERPROFILE, or pass -InstallRoot."
+$arguments = @($scriptPath, "--repository-url", $RepositoryUrl)
+if ($InstallRoot) {
+  $arguments += @("--install-root", $InstallRoot)
 }
-
-function Get-DefaultInstallRoot {
-  $codexRoot = if ($env:CODEX_HOME) {
-    $env:CODEX_HOME
-  } else {
-    Join-Path (Get-HomeDirectory) ".codex"
-  }
-
-  return (Join-Path (Join-Path $codexRoot "repos") $repoName)
-}
-
-function Test-IsGitRepository {
-  param(
-    [string]$Path
-  )
-
-  return (Test-Path -LiteralPath (Join-Path $Path ".git"))
-}
-
-function Convert-ToSshGitHubUrl {
-  param(
-    [string]$Url
-  )
-
-  if ($Url -match '^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$') {
-    return ("git@github.com:{0}/{1}.git" -f $Matches[1], $Matches[2])
-  }
-
-  return $null
-}
-
-function Normalize-RepositoryUrl {
-  param(
-    [string]$Url
-  )
-
-  if ($Url -match '^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$') {
-    return ("github.com/{0}/{1}" -f $Matches[1], $Matches[2]).ToLowerInvariant()
-  }
-
-  if ($Url -match '^git@github\.com:([^/]+)/([^/]+?)(?:\.git)?$') {
-    return ("github.com/{0}/{1}" -f $Matches[1], $Matches[2]).ToLowerInvariant()
-  }
-
-  return ([System.IO.Path]::GetFullPath($Url)).ToLowerInvariant()
-}
-
-function Invoke-GitClone {
-  param(
-    [string]$GitExecutable,
-    [string]$RepoUrl,
-    [string]$Path
-  )
-
-  & $GitExecutable clone $RepoUrl $Path
-  return $LASTEXITCODE
-}
-
-function Resolve-CheckoutPath {
-  param(
-    [string]$ProvidedPath
-  )
-
-  if (-not $ProvidedPath) {
-    return (Get-DefaultInstallRoot)
-  }
-
-  $resolvedCandidate = [System.IO.Path]::GetFullPath($ProvidedPath)
-  if ((Split-Path -Leaf $resolvedCandidate) -eq $repoName) {
-    return $resolvedCandidate
-  }
-
-  return (Join-Path $resolvedCandidate $repoName)
-}
-
-function Ensure-RepositoryCheckout {
-  param(
-    [string]$Path,
-    [string]$RepoUrl
-  )
-
-  $gitCommand = Get-Command git -ErrorAction Stop
-
-  if (!(Test-Path -LiteralPath $Path)) {
-    $parentPath = Split-Path -Parent $Path
-    if ($parentPath -and !(Test-Path -LiteralPath $parentPath)) {
-      New-Item -ItemType Directory -Path $parentPath -Force | Out-Null
-    }
-
-    $cloneExitCode = Invoke-GitClone -GitExecutable $gitCommand.Source -RepoUrl $RepoUrl -Path $Path
-    if ($cloneExitCode -ne 0) {
-      $sshRepoUrl = Convert-ToSshGitHubUrl -Url $RepoUrl
-      if ($sshRepoUrl) {
-        Write-Output "HTTPS clone failed. Retrying with SSH..."
-        $cloneExitCode = Invoke-GitClone -GitExecutable $gitCommand.Source -RepoUrl $sshRepoUrl -Path $Path
-        if ($cloneExitCode -eq 0) {
-          return "cloned via ssh fallback"
-        }
-      }
-
-      throw "git clone failed for $RepoUrl"
-    }
-    return "cloned"
-  }
-
-  $resolvedPath = (Resolve-Path -LiteralPath $Path).Path
-
-  if (!(Test-IsGitRepository -Path $resolvedPath)) {
-    throw "Install root already exists but is not a git repository: $resolvedPath"
-  }
-
-  $repoStatus = & $gitCommand.Source -C $resolvedPath status --porcelain
-  if ($LASTEXITCODE -ne 0) {
-    throw "Unable to inspect repository status at $resolvedPath"
-  }
-
-  if ($repoStatus) {
-    throw "Install root contains local changes: $resolvedPath. Commit or clean them before bootstrap update."
-  }
-
-  $originUrl = (& $gitCommand.Source -C $resolvedPath remote get-url origin).Trim()
-  if ($LASTEXITCODE -ne 0) {
-    throw "Unable to read origin remote for $resolvedPath"
-  }
-
-  if ((Normalize-RepositoryUrl -Url $originUrl) -ne (Normalize-RepositoryUrl -Url $RepoUrl)) {
-    throw "Install root points to a different origin: $originUrl"
-  }
-
-  & $gitCommand.Source -C $resolvedPath pull --ff-only origin main
-  if ($LASTEXITCODE -ne 0) {
-    throw "git pull --ff-only failed for $resolvedPath"
-  }
-
-  return "updated"
-}
-
-$resolvedInstallRoot = Resolve-CheckoutPath -ProvidedPath $InstallRoot
-$checkoutAction = Ensure-RepositoryCheckout -Path $resolvedInstallRoot -RepoUrl $RepositoryUrl
-$installScriptPath = Join-Path $resolvedInstallRoot "install.ps1"
-
-if (!(Test-Path -LiteralPath $installScriptPath)) {
-  throw "Expected install.ps1 inside the repository checkout at $installScriptPath"
-}
-
-Write-Output ("Repository {0}: {1}" -f $checkoutAction, $resolvedInstallRoot)
-
-$installParams = @{
-  BackendPackageSpec = $BackendPackageSpec
-}
-
 if ($CodexSkillsRoot) {
-  $installParams.CodexSkillsRoot = $CodexSkillsRoot
+  $arguments += @("--codex-skills-root", $CodexSkillsRoot)
 }
-
 if ($BackendRepoPath) {
-  $installParams.BackendRepoPath = $BackendRepoPath
+  $arguments += @("--backend-repo-path", $BackendRepoPath)
 }
-
+if ($BackendPackageSpec) {
+  $arguments += @("--backend-package-spec", $BackendPackageSpec)
+}
 if ($SkipSmokeTest) {
-  $installParams.SkipSmokeTest = $true
+  $arguments += "--skip-smoke-test"
 }
-
 if ($CheckOnly) {
-  $installParams.CheckOnly = $true
+  $arguments += "--check-only"
 }
-
 if ($ForceRelink) {
-  $installParams.ForceRelink = $true
+  $arguments += "--force-relink"
 }
 
-& $installScriptPath @installParams
+& $nodeCommand.Source @arguments
 exit $LASTEXITCODE

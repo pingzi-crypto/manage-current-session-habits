@@ -17,8 +17,12 @@ It is meant for release-time confidence, not exhaustive platform coverage.
 Make sure these are available on `PATH`:
 
 - `git`
-- `pwsh`
 - `node`
+
+Platform-specific shell:
+
+- Windows: `pwsh`
+- macOS / Linux: `bash`
 
 If your environment blocks GitHub HTTPS clone, confirm SSH clone works for GitHub.
 
@@ -26,7 +30,9 @@ If your environment blocks GitHub HTTPS clone, confirm SSH clone works for GitHu
 
 ## 1. First Install
 
-Run the public quick start:
+Run the public quick start.
+
+Windows:
 
 ```powershell
 $repo = Join-Path $HOME ".codex/repos/manage-current-session-habits"
@@ -39,6 +45,19 @@ if (Test-Path -LiteralPath $repo) {
   }
 }
 & (Join-Path $repo "install.ps1")
+```
+
+macOS / Linux:
+
+```bash
+repo="$HOME/.codex/repos/manage-current-session-habits"
+if [ -d "$repo/.git" ]; then
+  git -C "$repo" pull --ff-only origin main
+else
+  git clone https://github.com/pingzi-crypto/manage-current-session-habits.git "$repo" ||
+    git clone git@github.com:pingzi-crypto/manage-current-session-habits.git "$repo"
+fi
+bash "$repo/install.sh"
 ```
 
 Pass criteria:
@@ -67,7 +86,13 @@ Expected result:
 Run:
 
 ```powershell
+# Windows
 ./uninstall.ps1
+```
+
+```bash
+# macOS / Linux
+bash ./uninstall.sh
 ```
 
 Pass criteria:
@@ -80,13 +105,25 @@ Pass criteria:
 Preview-only variant:
 
 ```powershell
+# Windows
 ./uninstall.ps1 -CheckOnly
+```
+
+```bash
+# macOS / Linux
+bash ./uninstall.sh --check-only
 ```
 
 Keep-generated-backend variant:
 
 ```powershell
+# Windows
 ./uninstall.ps1 -KeepGeneratedBackend
+```
+
+```bash
+# macOS / Linux
+bash ./uninstall.sh --keep-generated-backend
 ```
 
 ---
@@ -96,7 +133,13 @@ Keep-generated-backend variant:
 From the same repository checkout, run:
 
 ```powershell
+# Windows
 ./install.ps1
+```
+
+```bash
+# macOS / Linux
+bash ./install.sh
 ```
 
 Pass criteria:
@@ -112,9 +155,14 @@ Pass criteria:
 If local-checkout compatibility matters for this release, also run:
 
 ```powershell
+# Windows
 ./install.ps1 -BackendRepoPath <path-to-user-habit-pipeline>
 ```
 
+```bash
+# macOS / Linux
+bash ./install.sh --backend-repo-path <path-to-user-habit-pipeline>
+```
 Pass criteria:
 
 - install succeeds without editing config by hand

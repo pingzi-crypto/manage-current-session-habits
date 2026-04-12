@@ -8,65 +8,28 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+$nodeCommand = Get-Command node -ErrorAction Stop
+$scriptPath = Join-Path (Split-Path -Parent $MyInvocation.MyCommand.Path) "scripts/install-entry.js"
 
-$repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-$scriptsRoot = Join-Path $repoRoot "scripts"
-$installScriptPath = Join-Path $scriptsRoot "install-skill.ps1"
-$checkScriptPath = Join-Path $scriptsRoot "check-install.ps1"
-
-if (!(Test-Path -LiteralPath $installScriptPath)) {
-  throw "Install script was not found at $installScriptPath"
-}
-
-if (!(Test-Path -LiteralPath $checkScriptPath)) {
-  throw "Check script was not found at $checkScriptPath"
-}
-
-$installParams = @{
-  SkillRepoPath = $repoRoot
-  BackendPackageSpec = $BackendPackageSpec
-}
-
+$arguments = @($scriptPath)
 if ($CodexSkillsRoot) {
-  $installParams.CodexSkillsRoot = $CodexSkillsRoot
+  $arguments += @("--codex-skills-root", $CodexSkillsRoot)
 }
-
 if ($BackendRepoPath) {
-  $installParams.BackendRepoPath = $BackendRepoPath
+  $arguments += @("--backend-repo-path", $BackendRepoPath)
 }
-
-if ($CheckOnly) {
-  $installParams.CheckOnly = $true
+if ($BackendPackageSpec) {
+  $arguments += @("--backend-package-spec", $BackendPackageSpec)
 }
-
-if ($ForceRelink) {
-  $installParams.ForceRelink = $true
-}
-
-Write-Output "Installing manage-current-session-habits from $repoRoot"
-& $installScriptPath @installParams
-if ($LASTEXITCODE -ne 0) {
-  exit $LASTEXITCODE
-}
-
-if ($CheckOnly) {
-  exit 0
-}
-
 if ($SkipSmokeTest) {
-  Write-Output "Skipped smoke validation."
-  exit 0
+  $arguments += "--skip-smoke-test"
+}
+if ($CheckOnly) {
+  $arguments += "--check-only"
+}
+if ($ForceRelink) {
+  $arguments += "--force-relink"
 }
 
-Write-Output "Running install smoke validation..."
-$checkParams = @{
-  SkillRepoPath = $repoRoot
-  SmokeTest = $true
-}
-
-if ($CodexSkillsRoot) {
-  $checkParams.CodexSkillsRoot = $CodexSkillsRoot
-}
-
-& $checkScriptPath @checkParams
+& $nodeCommand.Source @arguments
 exit $LASTEXITCODE

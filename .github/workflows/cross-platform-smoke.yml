@@ -33,7 +33,14 @@ jobs:
         with:
           node-version: 20
 
-      - name: Run cross-platform lifecycle smoke
+      - name: Run cross-platform lifecycle smoke (Windows)
+        if: runner.os == 'Windows'
         shell: pwsh
         run: |
           ./scripts/ci-smoke.ps1 -BackendRepoPath (Join-Path $PWD "backend-repo")
+
+      - name: Run cross-platform lifecycle smoke (POSIX)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          bash ./scripts/ci-smoke.sh --backend-repo-path "$PWD/backend-repo"

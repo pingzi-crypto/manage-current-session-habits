@@ -10,7 +10,7 @@ For deeper coordination with the backend repo, keep using the cross-repo release
 ## Target Baseline
 
 - skill repo: `manage-current-session-habits v0.3.3`
-- backend contract baseline: `user-habit-pipeline v0.7.4`
+- backend contract baseline: `user-habit-pipeline v0.7.6`
 
 ---
 
@@ -48,14 +48,27 @@ Treat the skill release as blocked if the backend release gate fails.
 From this repository, run:
 
 ```powershell
+# Windows
 ./install.ps1 -CheckOnly
 ./scripts/check-install.ps1 -SmokeTest
+```
+
+```bash
+# macOS / Linux
+bash ./install.sh --check-only
+bash ./scripts/check-install.sh --smoke-test
 ```
 
 If local backend repo compatibility matters for this release, also run:
 
 ```powershell
+# Windows
 ./install.ps1 -BackendRepoPath <path-to-user-habit-pipeline>
+```
+
+```bash
+# macOS / Linux
+bash ./install.sh --backend-repo-path <path-to-user-habit-pipeline>
 ```
 
 Confirm:
@@ -65,6 +78,7 @@ Confirm:
 - cached follow-up apply works through the installed wrapper
 - repo-mode install still works if promised
 - the backend `--host codex` starter still describes the same current-session flow the skill wraps
+- Windows and POSIX public entrypoints still match the README
 
 ---
 
@@ -115,4 +129,4 @@ After the release is live, confirm:
 
 - the release page points at the intended release body
 - the README quick start still matches the install path you actually validated
-- the skill still behaves consistently with backend `v0.7.4` bridge output
+- the skill still behaves consistently with backend `v0.7.6` bridge output

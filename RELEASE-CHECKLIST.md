@@ -14,7 +14,7 @@ Confirm the backend contract you intend to ship against is already known-good.
 Current expected baseline:
 
 - backend repo: `user-habit-pipeline`
-- backend release baseline: `v0.7.4`
+- backend release baseline: `v0.7.6`
 
 Run from the backend repo:
 
@@ -37,8 +37,15 @@ Confirm:
 Run from this repository:
 
 ```powershell
+# Windows
 ./install.ps1 -CheckOnly
 ./scripts/check-install.ps1 -SmokeTest
+```
+
+```bash
+# macOS / Linux
+bash ./install.sh --check-only
+bash ./scripts/check-install.sh --smoke-test
 ```
 
 Confirm:
@@ -54,7 +61,13 @@ Confirm:
 If local backend checkout compatibility is part of the release promise, also run:
 
 ```powershell
+# Windows
 ./install.ps1 -BackendRepoPath <path-to-user-habit-pipeline>
+```
+
+```bash
+# macOS / Linux
+bash ./install.sh --backend-repo-path <path-to-user-habit-pipeline>
 ```
 
 Confirm:
@@ -96,6 +109,7 @@ Pay special attention to:
 - cached follow-up apply behavior
 - low-ROI stop wording
 - package mode vs repo override install behavior
+- Windows PowerShell entrypoints vs macOS/Linux shell entrypoints
 
 ---
 
