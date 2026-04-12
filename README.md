@@ -10,6 +10,12 @@ If you are searching for a Codex skill, AI chat habit scanner, current conversat
 
 ![README short demo](assets/readme-short-demo.gif)
 
+Related entrypoints:
+
+- Backend package: [user-habit-pipeline on npm](https://www.npmjs.com/package/user-habit-pipeline)
+- Backend repo: [pingzi-crypto/user-habit-pipeline](https://github.com/pingzi-crypto/user-habit-pipeline)
+- External consumer demo: [pingzi-crypto/user-habit-pipeline-codex-demo](https://github.com/pingzi-crypto/user-habit-pipeline-codex-demo)
+
 ## Quick Start
 
 Most reliable install from any PowerShell 7 window:
@@ -69,6 +75,10 @@ npx user-habit-pipeline-init-consumer --host codex --out .\habit-pipeline-codex-
 ```
 
 That backend starter gives you the smallest copyable scan/apply wrapper around `codex-session-habits`.
+
+If you want to see that backend path already running in a clean outside project, open:
+
+- [pingzi-crypto/user-habit-pipeline-codex-demo](https://github.com/pingzi-crypto/user-habit-pipeline-codex-demo)
 
 If you want to keep using a local backend checkout instead of the published npm package, install with:
 
@@ -154,6 +164,8 @@ It forwards current-thread context to the backend, and the user still explicitly
 
 ## More Details
 
+- [user-habit-pipeline backend](https://github.com/pingzi-crypto/user-habit-pipeline)
+- [user-habit-pipeline-codex-demo](https://github.com/pingzi-crypto/user-habit-pipeline-codex-demo)
 - [INSTALL-LIFECYCLE-CHECKLIST.md](/E:/manage-current-session-habits/INSTALL-LIFECYCLE-CHECKLIST.md)
 - [RELEASE-CHECKLIST.md](/E:/manage-current-session-habits/RELEASE-CHECKLIST.md)
 - [RELEASE-RUNBOOK.md](/E:/manage-current-session-habits/RELEASE-RUNBOOK.md)
