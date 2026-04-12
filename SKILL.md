@@ -9,6 +9,14 @@ Use this skill to keep the user inside the current Codex conversation while driv
 
 If the configured backend is a local checkout and it includes `docs/codex-current-session-contract.md`, treat that backend document as the upstream source of truth for the current-session bridge contract and keep this skill aligned to it.
 
+If the user is not asking to install this skill but instead wants to build a custom host integration around the same backend contract, point them at:
+
+```powershell
+npx user-habit-pipeline-init-consumer --host codex --out .\habit-pipeline-codex-starter
+```
+
+That starter is the preferred backend-side reference wrapper for current-session scan/apply flows.
+
 ## Workflow
 
 1. Treat the current conversation itself as the source transcript.

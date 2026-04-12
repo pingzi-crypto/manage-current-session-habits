@@ -62,6 +62,14 @@ This installs the skill and runs the smoke check in one step.
 If the smoke check passes, the current-session bridge is installed correctly.
 That smoke check now verifies list, scan, and cached follow-up apply through the installed wrapper.
 
+If you are not installing this skill and instead want to build your own Codex-style host integration on top of the backend contract, start from the packaged backend starter:
+
+```powershell
+npx user-habit-pipeline-init-consumer --host codex --out .\habit-pipeline-codex-starter
+```
+
+That backend starter gives you the smallest copyable scan/apply wrapper around `codex-session-habits`.
+
 If you want to keep using a local backend checkout instead of the published npm package, install with:
 
 ```powershell
@@ -117,6 +125,7 @@ the install and check scripts now support PowerShell 7 on macOS and Linux, but t
 - lets the user confirm or ignore candidates with short follow-up prompts
 - lists or removes already saved user habit phrases
 - keeps the interaction inside the conversation UI
+- stays aligned with the backend `codex-session-habits` contract instead of inventing a separate host protocol
 
 ## Search-Friendly Use Cases
 
