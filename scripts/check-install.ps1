@@ -203,6 +203,18 @@ user: 收尾一下
       throw "Smoke test scan step did not return suggested_follow_ups."
     }
 
+    if (-not $scanParsed.candidate_previews) {
+      throw "Smoke test scan step did not return candidate_previews."
+    }
+
+    if ($scanParsed.candidate_previews.Count -lt 1) {
+      throw "Smoke test scan step returned empty candidate_previews."
+    }
+
+    if (-not $scanParsed.candidate_previews[0].evidence_summary) {
+      throw "Smoke test scan step did not return evidence_summary in candidate_previews."
+    }
+
     if (-not $scanParsed.next_step_assessment) {
       throw "Smoke test scan step did not return next_step_assessment."
     }

@@ -33,8 +33,9 @@ When the bridge returns successful JSON:
 
 1. If `assistant_reply_markdown` is present, use it as the primary user-facing reply.
 2. If `suggested_follow_ups` is present, surface those prompts directly instead of inventing different wording.
-3. If `next_step_assessment` is present, honor it instead of overriding the bridge's stop/continue judgment with a new improvised suggestion.
-4. Only synthesize your own wording when the bridge did not provide presentation fields or when a tiny clarification is required for local context.
+3. If `candidate_previews` is present for a scan result, prefer it for any extra structured recap such as phrase, intent, confidence summary, evidence summary, or risk summary.
+4. If `next_step_assessment` is present, honor it instead of overriding the bridge's stop/continue judgment with a new improvised suggestion.
+5. Only synthesize your own wording when the bridge did not provide presentation fields or when a tiny clarification is required for local context.
 
 Do not restate the full raw JSON unless the user explicitly asks for it.
 Do not replace backend wording with a looser paraphrase unless the backend reply is clearly insufficient for the current turn.
@@ -77,8 +78,9 @@ user: 收尾一下
 ./scripts/invoke-backend.ps1 -Request "扫描这次会话里的习惯候选" -Transcript $transcript
 ```
 
-5. Summarize the returned candidates in plain language: candidate id, phrase, suggested intent if any, confidence, and risk flags.
+5. Summarize the returned candidates in plain language: candidate id, phrase, suggested intent if any, confidence, evidence, and risk flags.
    Prefer the backend-provided `assistant_reply_markdown` and `suggested_follow_ups` fields when present.
+   If `candidate_previews` is present, use that structured layer instead of re-deriving confidence/evidence/risk wording from raw nested fields.
    If the bridge also returns `next_step_assessment`, preserve that direction in the visible reply.
 6. End the message with natural follow-up prompts the user can say next, such as `添加第1条`, `把第2条加到 session_close 场景`, or `忽略第3条`.
 7. Do not auto-add anything during the scan step.
