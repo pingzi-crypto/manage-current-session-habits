@@ -2,7 +2,7 @@ param(
   [string]$SkillRepoPath,
   [string]$CodexSkillsRoot,
   [string]$BackendRepoPath,
-  [string]$BackendPackageSpec = "user-habit-pipeline",
+  [string]$BackendPackageSpec = "user-habit-pipeline@latest",
   [switch]$CheckOnly,
   [switch]$ForceRelink
 )

@@ -1,0 +1,39 @@
+name: cross-platform-smoke
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-latest
+          - macos-latest
+          - ubuntu-latest
+
+    steps:
+      - name: Checkout skill repo
+        uses: actions/checkout@v4
+
+      - name: Checkout backend repo
+        uses: actions/checkout@v4
+        with:
+          repository: pingzi-crypto/user-habit-pipeline
+          path: backend-repo
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run cross-platform lifecycle smoke
+        shell: pwsh
+        run: |
+          ./scripts/ci-smoke.ps1 -BackendRepoPath (Join-Path $PWD "backend-repo")

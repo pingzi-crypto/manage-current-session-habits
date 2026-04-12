@@ -67,7 +67,7 @@ Expected result:
 Run:
 
 ```powershell
-& .\uninstall.ps1
+./uninstall.ps1
 ```
 
 Pass criteria:
@@ -80,13 +80,13 @@ Pass criteria:
 Preview-only variant:
 
 ```powershell
-& .\uninstall.ps1 -CheckOnly
+./uninstall.ps1 -CheckOnly
 ```
 
 Keep-generated-backend variant:
 
 ```powershell
-& .\uninstall.ps1 -KeepGeneratedBackend
+./uninstall.ps1 -KeepGeneratedBackend
 ```
 
 ---
@@ -96,7 +96,7 @@ Keep-generated-backend variant:
 From the same repository checkout, run:
 
 ```powershell
-& .\install.ps1
+./install.ps1
 ```
 
 Pass criteria:
@@ -112,7 +112,7 @@ Pass criteria:
 If local-checkout compatibility matters for this release, also run:
 
 ```powershell
-& .\install.ps1 -BackendRepoPath <path-to-user-habit-pipeline>
+./install.ps1 -BackendRepoPath <path-to-user-habit-pipeline>
 ```
 
 Pass criteria:

@@ -52,7 +52,7 @@ If you prefer to inspect the repository first, use the manual path:
 3. Run:
 
 ```powershell
-& .\install.ps1
+./install.ps1
 ```
 
 4. In a normal Codex conversation, say:
@@ -81,7 +81,7 @@ If you want to see that backend path already running in a clean outside project,
 If you want to keep using a local backend checkout instead of the published npm package, install with:
 
 ```powershell
-& .\install.ps1 -BackendRepoPath /path/to/user-habit-pipeline
+./install.ps1 -BackendRepoPath /path/to/user-habit-pipeline
 ```
 
 If you want bootstrap mode but with an explicit local checkout path:
@@ -95,13 +95,13 @@ Invoke-WebRequest https://raw.githubusercontent.com/pingzi-crypto/manage-current
 If you only want a preview of what would be installed:
 
 ```powershell
-& .\install.ps1 -CheckOnly
+./install.ps1 -CheckOnly
 ```
 
 To remove the installed skill link and generated local runtime files:
 
 ```powershell
-& .\uninstall.ps1
+./uninstall.ps1
 ```
 
 This removes:
@@ -115,17 +115,17 @@ It does not delete the repository checkout itself.
 If you want to preview the uninstall first:
 
 ```powershell
-& .\uninstall.ps1 -CheckOnly
+./uninstall.ps1 -CheckOnly
 ```
 
 If you want to keep the generated backend runtime but remove the installed skill link:
 
 ```powershell
-& .\uninstall.ps1 -KeepGeneratedBackend
+./uninstall.ps1 -KeepGeneratedBackend
 ```
 
-Non-Windows note:
-the install and check scripts now support PowerShell 7 on macOS and Linux, but the repository is currently only smoke-verified on Windows.
+Cross-platform note:
+the install and check scripts are designed for PowerShell 7 on Windows, macOS, and Linux, and the repository now includes a cross-platform smoke matrix for those three runner families.
 
 ## What It Does
 

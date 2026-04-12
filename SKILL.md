@@ -74,7 +74,7 @@ user: 以后我说“收尾一下”就是 close_session
 assistant: 收到。
 user: 收尾一下
 '@
-& .\scripts\invoke-backend.ps1 -Request "扫描这次会话里的习惯候选" -Transcript $transcript
+./scripts/invoke-backend.ps1 -Request "扫描这次会话里的习惯候选" -Transcript $transcript
 ```
 
 5. Summarize the returned candidates in plain language: candidate id, phrase, suggested intent if any, confidence, and risk flags.
@@ -94,15 +94,15 @@ Preferred scan reply behavior:
 When the user explicitly chooses a candidate, run the same natural-language request through the bridge CLI:
 
 ```powershell
-& .\scripts\invoke-backend.ps1 -Request "添加第1条"
-& .\scripts\invoke-backend.ps1 -Request "把第1条加到 session_close 场景"
-& .\scripts\invoke-backend.ps1 -Request "忽略第1条"
+./scripts/invoke-backend.ps1 -Request "添加第1条"
+./scripts/invoke-backend.ps1 -Request "把第1条加到 session_close 场景"
+./scripts/invoke-backend.ps1 -Request "忽略第1条"
 ```
 
 If the candidate is review-only and the user supplies meaning explicitly, keep that override in the request:
 
 ```powershell
-& .\scripts\invoke-backend.ps1 -Request "把第1条加到 session_close 场景; intent=close_session"
+./scripts/invoke-backend.ps1 -Request "把第1条加到 session_close 场景; intent=close_session"
 ```
 
 If the cache is missing, tell the user to scan the current conversation first.
@@ -121,8 +121,8 @@ Preferred apply reply behavior:
 This skill can also forward other lightweight management prompts without leaving the conversation, for example:
 
 ```powershell
-& .\scripts\invoke-backend.ps1 -Request "列出用户习惯短句"
-& .\scripts\invoke-backend.ps1 -Request "删除用户习惯短句: 收尾一下"
+./scripts/invoke-backend.ps1 -Request "列出用户习惯短句"
+./scripts/invoke-backend.ps1 -Request "删除用户习惯短句: 收尾一下"
 ```
 
 Use the bridge CLI for these requests so the same prompt parser remains the source of truth.

@@ -48,14 +48,14 @@ Treat the skill release as blocked if the backend release gate fails.
 From this repository, run:
 
 ```powershell
-& .\install.ps1 -CheckOnly
-& .\scripts\check-install.ps1 -SmokeTest
+./install.ps1 -CheckOnly
+./scripts/check-install.ps1 -SmokeTest
 ```
 
 If local backend repo compatibility matters for this release, also run:
 
 ```powershell
-& .\install.ps1 -BackendRepoPath <path-to-user-habit-pipeline>
+./install.ps1 -BackendRepoPath <path-to-user-habit-pipeline>
 ```
 
 Confirm:

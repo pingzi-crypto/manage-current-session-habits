@@ -3,7 +3,7 @@ param(
   [string]$InstallRoot,
   [string]$CodexSkillsRoot,
   [string]$BackendRepoPath,
-  [string]$BackendPackageSpec = "user-habit-pipeline",
+  [string]$BackendPackageSpec = "user-habit-pipeline@latest",
   [switch]$SkipSmokeTest,
   [switch]$CheckOnly,
   [switch]$ForceRelink

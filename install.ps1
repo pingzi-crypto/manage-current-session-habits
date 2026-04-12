@@ -1,7 +1,7 @@
 param(
   [string]$CodexSkillsRoot,
   [string]$BackendRepoPath,
-  [string]$BackendPackageSpec = "user-habit-pipeline",
+  [string]$BackendPackageSpec = "user-habit-pipeline@latest",
   [switch]$SkipSmokeTest,
   [switch]$CheckOnly,
   [switch]$ForceRelink
@@ -10,8 +10,9 @@ param(
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-$installScriptPath = Join-Path $repoRoot "scripts\install-skill.ps1"
-$checkScriptPath = Join-Path $repoRoot "scripts\check-install.ps1"
+$scriptsRoot = Join-Path $repoRoot "scripts"
+$installScriptPath = Join-Path $scriptsRoot "install-skill.ps1"
+$checkScriptPath = Join-Path $scriptsRoot "check-install.ps1"
 
 if (!(Test-Path -LiteralPath $installScriptPath)) {
   throw "Install script was not found at $installScriptPath"

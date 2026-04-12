@@ -6,7 +6,7 @@ param(
   [switch]$ThreadStdin,
   [string]$UserRegistryPath,
   [int]$MaxCandidates,
-  [string]$ConfigPath = (Join-Path $PSScriptRoot "..\\config\\local-config.json")
+  [string]$ConfigPath = (Join-Path (Join-Path (Join-Path $PSScriptRoot "..") "config") "local-config.json")
 )
 
 $ErrorActionPreference = "Stop"

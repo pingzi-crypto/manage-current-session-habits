@@ -36,8 +36,8 @@ Confirm:
 Run from this repository:
 
 ```powershell
-& .\install.ps1 -CheckOnly
-& .\scripts\check-install.ps1 -SmokeTest
+./install.ps1 -CheckOnly
+./scripts/check-install.ps1 -SmokeTest
 ```
 
 Confirm:
@@ -53,7 +53,7 @@ Confirm:
 If local backend checkout compatibility is part of the release promise, also run:
 
 ```powershell
-& .\install.ps1 -BackendRepoPath <path-to-user-habit-pipeline>
+./install.ps1 -BackendRepoPath <path-to-user-habit-pipeline>
 ```
 
 Confirm:
