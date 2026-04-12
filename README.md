@@ -2,11 +2,7 @@
 
 Codex skill for scanning the current conversation for user habit phrase candidates and confirming them in place through `user-habit-pipeline`.
 
-If you want AI habit management to happen inside the normal Codex thread instead of through transcript-file hunting or manual backend commands, this is the thin integration layer for that flow.
-
-This project is best understood as a Codex app skill for user habit memory, current-session phrase scanning, and in-thread confirmation of repeated user shorthand.
-
-If you are searching for a Codex skill, AI chat habit scanner, current conversation phrase extractor, or an in-thread user preference manager, this repository is the intended entrypoint.
+Use it when you want current-session habit management to happen inside the normal Codex thread instead of through transcript-file hunting or manual backend commands.
 
 ![README short demo](assets/readme-short-demo.gif)
 
@@ -15,6 +11,8 @@ Related entrypoints:
 - Backend package: [user-habit-pipeline on npm](https://www.npmjs.com/package/user-habit-pipeline)
 - Backend repo: [pingzi-crypto/user-habit-pipeline](https://github.com/pingzi-crypto/user-habit-pipeline)
 - External consumer demo: [pingzi-crypto/user-habit-pipeline-codex-demo](https://github.com/pingzi-crypto/user-habit-pipeline-codex-demo)
+
+This repository is the thin Codex app bridge for user habit memory, current-session phrase scanning, and in-thread confirmation of repeated user shorthand.
 
 ## Quick Start
 
