@@ -9,7 +9,7 @@ For deeper coordination with the backend repo, keep using the cross-repo release
 
 ## Target Baseline
 
-- skill repo: `manage-current-session-habits v0.3.3`
+- skill repo: `manage-current-session-habits v0.3.4`
 - backend contract baseline: `user-habit-pipeline v0.7.6`
 
 ---
@@ -25,7 +25,7 @@ Confirm:
 Current release-facing files:
 
 - [README.md](/E:/manage-current-session-habits/README.md)
-- [RELEASE-NOTES-v0.3.3.md](/E:/manage-current-session-habits/RELEASE-NOTES-v0.3.3.md)
+- [RELEASE-NOTES-v0.3.4.md](/E:/manage-current-session-habits/RELEASE-NOTES-v0.3.4.md)
 - [INSTALL-LIFECYCLE-CHECKLIST.md](/E:/manage-current-session-habits/INSTALL-LIFECYCLE-CHECKLIST.md)
 - [assets/readme-short-demo.gif](/E:/manage-current-session-habits/assets/readme-short-demo.gif)
 
@@ -101,25 +101,25 @@ Minimum expectation before release:
 
 Recommended tag:
 
-- `v0.3.3`
+- `v0.3.4`
 
 Suggested commands:
 
 ```powershell
-git tag v0.3.3
-git push origin v0.3.3
+git tag v0.3.4
+git push origin v0.3.4
 ```
 
 On GitHub:
 
 1. open the `manage-current-session-habits` releases page
-2. create a new release from tag `v0.3.3`
-3. use [RELEASE-NOTES-v0.3.3.md](/E:/manage-current-session-habits/RELEASE-NOTES-v0.3.3.md) as the release body
+2. create a new release from tag `v0.3.4`
+3. use [RELEASE-NOTES-v0.3.4.md](/E:/manage-current-session-habits/RELEASE-NOTES-v0.3.4.md) as the release body
 4. attach or reuse [assets/readme-short-demo.gif](/E:/manage-current-session-habits/assets/readme-short-demo.gif) if the release page should mirror the README demo
 
 Recommended title:
 
-- `manage-current-session-habits v0.3.3`
+- `manage-current-session-habits v0.3.4`
 
 ---
 

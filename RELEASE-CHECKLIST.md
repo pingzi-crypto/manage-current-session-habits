@@ -100,7 +100,7 @@ Check that these still agree:
 
 - [README.md](/E:/manage-current-session-habits/README.md)
 - [SKILL.md](/E:/manage-current-session-habits/SKILL.md)
-- [RELEASE-NOTES-v0.3.3.md](/E:/manage-current-session-habits/RELEASE-NOTES-v0.3.3.md)
+- [RELEASE-NOTES-v0.3.4.md](/E:/manage-current-session-habits/RELEASE-NOTES-v0.3.4.md)
 - backend [codex-current-session-contract.md](https://github.com/pingzi-crypto/user-habit-pipeline/blob/main/docs/codex-current-session-contract.md)
 
 Pay special attention to:
@@ -118,7 +118,7 @@ Pay special attention to:
 Before publishing, confirm:
 
 - `README.md` is the install surface you want users to see
-- `RELEASE-NOTES-v0.3.3.md` still matches the release body you want to publish
+- `RELEASE-NOTES-v0.3.4.md` still matches the release body you want to publish
 - `assets/readme-short-demo.gif` is still the demo asset you want associated with the release page
 
 If these are stale, update them in the same change set instead of releasing with known mismatch.
