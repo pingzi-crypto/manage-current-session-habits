@@ -14,7 +14,7 @@ Confirm the backend contract you intend to ship against is already known-good.
 Current expected baseline:
 
 - backend repo: `user-habit-pipeline`
-- backend release baseline: `v0.7.6`
+- backend release baseline: `v0.7.8`
 
 Run from the backend repo:
 

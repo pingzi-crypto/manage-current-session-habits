@@ -10,7 +10,7 @@ This release turns the skill's install surface into a real dual-entrypoint path:
 - moved install and wrapper logic onto shared Node-based core scripts instead of maintaining separate platform-specific implementations
 - kept existing Windows `ps1` entrypoints as thin wrappers so current usage does not break
 - updated the skill README, lifecycle checklist, release checklist, runbook, and CI workflow to validate the public Windows and POSIX paths
-- revalidated package-mode and repo-mode smoke against backend `user-habit-pipeline v0.7.6`
+- revalidated package-mode and repo-mode smoke against backend `user-habit-pipeline v0.7.8`
 
 ## Why This Release Exists
 
@@ -58,4 +58,4 @@ This release was validated with:
 
 Current intended backend baseline for this skill release:
 
-- `user-habit-pipeline v0.7.6`
+- `user-habit-pipeline v0.7.8`
